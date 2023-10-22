@@ -86,7 +86,15 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 ![Image](./images/data_zh.png)
 
-数据集的分布如下所示：
+#### 金融咨询指令
+金融咨询指令数据来源于两部分：
+（1） 金融问答数据集。我们首先选择的金融问答数据集是FiQA，由于这是一个英文数据集且回答的答案质量存在一定的不足，因此我们将FiQA中的所有问题翻译成中文，并使用ChatGPT重新生成在中国背景下此问题的答案。除此之外，我们还根据200多个金融名词，针对每个名词让ChatGPT生成对应的问题，并要求在中国背景下回答这些问题。
+（2）经管之家论坛上的公开发帖。我们利用self-chat prompting方法引导ChatGPT围绕帖子主题生成多轮的问答。
+在引导ChatGPT生成数据的过程中，我们通过精心设计的prompt确保生成的问答符合中国的国情、立场、态度和语言风格。
+
+### 金融任务指令
+金融任务指令数据来源于两个部分：
+（1）金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
 
 | Dataset            | Major Task Type        | Minor Task Type           | \# Samples |
 |--------------------|------------------------|---------------------------|-----------:|
@@ -103,8 +111,8 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | OpenKG             | Imformation Extraction | Entity Extraction         |      67921 |
 | FDDC2018           | Translation            | Terminology Translation   |        333 |
 | Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 |
-| Wealth-alpaca-lora | Text Generation        | Keyword Generation        |      41825 |
-| TE~                | Question Answering     | Terminology Explanation   |       1836 |
+
+#### 金融计算指令
 
 <!-- 不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
 
