@@ -86,8 +86,27 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 ![Image](./images/data_zh.png)
 
+数据集的分布如下所示：
 
-不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
+| Dataset            | Major Task Type        | Minor Task Type           | \# Samples |
+|--------------------|------------------------|---------------------------|-----------:|
+| FPB                | Sentiment Analysis     | Sentiment Analysis        |      18690 |
+| FIQA-SA            | Sentiment Analysis     | Sentiment Analysis        |          - |
+| FNSC               | Sentiment Analysis     | Sentiment Analysis        |          - |
+| CCKS-NEC-2022      | Imformation Extraction | Causality Extraction      |       7499 |
+| SmoothNLP IEE      | Imformation Extraction | Event Extraction          |       3256 |
+| SmoothNLP NHG      | Text Generation        | Text Generation           |       4642 |
+| CCKS2022-event     | Text Classification    | Event Type Classification |       3578 |
+| Minds14            | Text Classification    | Intent Prediction         |      59143 |
+| Financial Report   | Imformation Extraction | Entity Extraction         |      61705 |
+| OpenKG             | Imformation Extraction | Entity Extraction         |       7672 |
+| OpenKG             | Imformation Extraction | Entity Extraction         |      67921 |
+| FDDC2018           | Translation            | Terminology Translation   |        333 |
+| Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 |
+| Wealth-alpaca-lora | Text Generation        | Keyword Generation        |      41825 |
+| TE~                | Question Answering     | Terminology Explanation   |       1836 |
+
+<!-- 不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
 
 <img src="" alt="" width=""/>
 
@@ -167,7 +186,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
     <td>总计</td>
     <td colspan="3">403K</td>
   </tr>
-</table>
+</table> -->
 
 我们总共发布了近30万条训练数据，其中包括 DISC-Law-SFT-Pair 和DISC-Law-SFT-Triplet。您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
 
