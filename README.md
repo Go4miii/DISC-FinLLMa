@@ -1,4 +1,3 @@
-# DISC-FinLLM
 <div align="center">
 
 ZH | [EN](./README-en.md)
@@ -15,7 +14,7 @@ ZH | [EN](./README-en.md)
 DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能、全面的**金融咨询服务**的金融领域大模型，由[复旦大学数据智能与社会计算实验室 (Fudan-DISC)](http://fudan-disc.com) 开发并开源。
 
 我们将在该项目中开源如下资源：
-* [DISC-Fin-SFT 数据集](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)（不包括法律问答部分）
+<!-- * [DISC-Fin-SFT 数据集](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)（不包括法律问答部分） -->
 * [DISC-FinLLM 模型权重](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
@@ -39,44 +38,54 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 
 <p></p>
 
-DISC-LawLLM 是一个具有法律推理和知识检索能力的智能法律系统，它面向不同群体，能在不同应用场景下提供帮助，主要有以下几个特点：
+DISC-FinLLM是一个金融领域的大语言模型，是由面向不同金融场景的4个模组：金融咨询、金融文本分析、金融计算、金融知识检索问答构成的多专家智慧金融系统。这些模组分别在金融NLP任务、人类试题、资料分析和时事分析等四个评测中展现出明显优势，证明了DISC-FinLLM能为广泛的金融领域提供强有力的支持。DISC-FinLLM能在不同应用场景下提供帮助，可用于实现不同的功能：
 
-* **法律文本处理能力：** 针对法律语言的理解与生成能力，包括信息抽取、文本摘要等，我们基于现有的 NLP 司法任务公开数据和真实世界的法律相关文本进行了微调数据的构建。
-* **法律推理思维能力：** 针对智慧司法领域任务的需求，我们使用法律三段论这一法理推理理论设计了指令数据，有效地提高了模型的法理推理能力。
-* **司法领域知识遵循能力：** 我们为智能法律处理系统配备了检索增强的模块，增强了系统对于背景知识的的检索和遵循能力。
+<!-- DISC-LawLLM 是一个具有法律推理和知识检索能力的智能法律系统，它面向不同群体，能在不同应用场景下提供帮助，主要有以下几个特点： -->
 
-除此之外，我们的研究过程还包括了如下贡献：
+* **金融咨询：** 该模组可以在中国金融语境下，与用户展开关于金融话题的多轮对话，或是为用户解释金融专业的相关知识，是由数据集中的金融咨询指令部分训练而来。
+* **金融文本分析：** 该模组可以帮助用户在金融文本上完成的信息抽取、情感分析、文本分类、文本生成等NLP任务，是由数据集中的金融任务指令部分训练而来。
+* **金融计算：** 该模组可以帮助用户完成与数学计算相关的任务，除了利率、增长率等基本计算，它还支持统计分析和包括Black-Scholes期权定价模型、EDF预期违约概率模型在内的金融模型计算。这一模组是由数据集中的金融计算指令部分训练而来。
+* **金融知识检索问答：** 该模组可以基于金融新闻、研报和相关政策文件为用户提供投资建议、时事分析、政策解读。它是由数据集中的检索增强指令部分训练而来。
+
+
+<!-- 除此之外，我们的研究过程还包括了如下贡献：
 
 * **高质量的训练数据集和普遍有效的训练范式**
-* **完备的法律模型测评框架和测评数据集**
+* **完备的法律模型测评框架和测评数据集** -->
+
+
 
 ### 模型效果演示
 
-#### 法律咨询
+#### 金融咨询
 
 ![consult_demo](./images/example_consult.gif)
 
-#### 协议撰写
+#### 金融文本分析
 
-![document_demo](./images/example_document.gif)
+![document_demo](./images/example_task.gif)
 
-#### 司法专业工具
+#### 金融计算
 
 ![tool_demo](./images/example_tool.gif)
 
-#### 考试助手
+#### 金融知识检索问答
 
-![exam_ref_demo](./images/example_exam_ref.gif)
+![exam_ref_demo](./images/example_retrieval.gif)
 
-#### 法条检索
+<!-- #### 法条检索
 
 ![law_ref_demo](./images/example_law_ref.gif)
 
 #### 带检索的法律咨询
 
-![consult_ref_demo](./images/example_consult_ref.gif)
+![consult_ref_demo](./images/example_consult_ref.gif) -->
 
-### DISC-Law-SFT 数据集
+### DISC-Fin-SFT 数据集
+DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用领域中文大模型Baichuan-13B-Chat上进行LoRA指令微调得到的金融大模型。DISC-Fin-SFT总共包含约25万条数据，分为四个子数据集，它们分别是金融咨询指令、金融任务指令、金融计算指令、检索增强指令。
+
+![Image](./images/data_zh.png)
+
 
 不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
 
@@ -323,6 +332,138 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 ### 客观评测
 
 为了客观、定量地评估智能法律系统的法律知识和推理能力，客观的评价数据集由一系列中国法律标准化考试和知识竞赛的单项和多项选择题组成，并根据内容复杂性和演绎难度，将问题分为困难、中等和简单三个层次。它可以提供一个更具挑战性和可靠的方法来衡量模型是否可以利用其知识来推理正确的答案。我们通过计算精度来表明性能。具体构成如下：
+
+| Dataset            | Major Task Type        | Minor Task Type         | \# Samples |
+|--------------------|------------------------|-------------------------|-----------:|
+| FPB                | Sentiment Analysis     | Sentiment Analysis      |      18690 |
+| FIQA-SA            | Sentiment Analysis     | Sentiment Analysis      |          - |
+| FNSC               | Sentiment Analysis     | Sentiment Analysis      |          - |
+| CCKS-NEC-2022      | Imformation Extraction | Causality Extraction    |       7499 |
+| SmoothNLP IEE      | Imformation Extraction | Event Extraction        |       3256 |
+| SmoothNLP NHG      | Text Generation        | Text Generation         |       4642 |
+| CCKS2022-event     | Imformation Extraction | Event Type Extraction   |       3678 |
+| Minds14            | Imformation Extraction | Event Type Extraction   |      59143 |
+| Financial Report   | Imformation Extraction | Entity Extraction       |      61705 |
+| OpenKG             | Imformation Extraction | Entity Extraction       |       7672 |
+| OpenKG             | Imformation Extraction | Entity Extraction       |      67921 |
+| FDDC2018           | Translation            | Terminology Translation |        333 |
+| Wealth-alpaca-lora | Question Answering     | Question Answering      |      41825 |
+| Wealth-alpaca-lora | Text Generation        | Keyword Generation      |      41825 |
+| TE~                | Question Answering     | Terminology Explanation |       1836 |
+
+
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-dvpl{border-color:inherit;text-align:right;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-0pky">Dataset</th>
+    <th class="tg-0pky">Major Task Type</th>
+    <th class="tg-0pky">Minor Task Type</th>
+    <th class="tg-dvpl">\# Samples</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">FPB</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-dvpl">18690</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">FIQA-SA</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-dvpl">-</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">FNSC</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-0pky">Sentiment Analysis</td>
+    <td class="tg-dvpl">-</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">CCKS-NEC-2022</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Causality Extraction</td>
+    <td class="tg-dvpl">7499</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">SmoothNLP IEE</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Event Extraction</td>
+    <td class="tg-dvpl">3256</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">SmoothNLP NHG</td>
+    <td class="tg-0pky">Text Generation</td>
+    <td class="tg-0pky">Text Generation</td>
+    <td class="tg-dvpl">4642</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">CCKS2022-event</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Event Type Extraction</td>
+    <td class="tg-dvpl">3678</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Minds14</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Event Type Extraction</td>
+    <td class="tg-dvpl">59143</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Financial Report</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Entity Extraction</td>
+    <td class="tg-dvpl">61705</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">OpenKG</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Entity Extraction</td>
+    <td class="tg-dvpl">7672</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">OpenKG</td>
+    <td class="tg-0pky">Imformation Extraction</td>
+    <td class="tg-0pky">Entity Extraction</td>
+    <td class="tg-dvpl">67921</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">FDDC2018</td>
+    <td class="tg-0pky">Translation</td>
+    <td class="tg-0pky">Terminology Translation</td>
+    <td class="tg-dvpl">333</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Wealth-alpaca-lora</td>
+    <td class="tg-0pky">Question Answering</td>
+    <td class="tg-0pky">Question Answering</td>
+    <td class="tg-dvpl">41825</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Wealth-alpaca-lora</td>
+    <td class="tg-0pky">Text Generation</td>
+    <td class="tg-0pky">Keyword Generation</td>
+    <td class="tg-dvpl">41825</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">TE~</td>
+    <td class="tg-0pky">Question Answering</td>
+    <td class="tg-0pky">Terminology Explanation</td>
+    <td class="tg-dvpl">1836</td>
+  </tr>
+</tbody>
+</table>
 
 <table>
   <tr>
