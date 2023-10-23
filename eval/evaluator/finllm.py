@@ -87,7 +87,7 @@ class DISCVFINLLMBaichuan13BBase(DISCFINLLMBase):
 
         inputs = self.tokenizer([template.format(prompt)], return_tensors="pt")
         inputs = inputs.to(self.device)
-        generate_ids = model.generate(**inputs, max_new_tokens=256)
+        generate_ids = self.model.generate(**inputs, max_new_tokens=256)
 
         return generate_ids
 
@@ -173,33 +173,6 @@ class DISCVFINLLMBloomz7B(DISCFINLLMBase):
         self.device = device
         
     def generate(self, prompt: str) -> str:
-        # template = (
-        #     "A chat between a curious user and an artificial intelligence assistant. "
-        #     "The assistant gives helpful, detailed, and polite answers to the user's questions.\n"
-        #     "Human: {}\nAssistant: "
-        # )
-        # inputs = self.tokenizer.encode(template.format(prompt), return_tensors="pt").to(DEVICE)
-        # outputs = self.model.generate(inputs)
-        # # outputs=self.model.generate(**inputs, max_new_tokens=64, repetition_penalty=1.1)
-        # # answer = self.tokenizer.decode(outputs[0]).replace(prompt, '')
-        # answer=self.tokenizer.decode(outputs[0])
-        # # start_index = answer.find("Assistant:")
-        # # end_index = answer.find("</s>")
-        # # # 提取内容
-        # # if start_index != -1 and end_index != -1:
-        # #     extracted_text = answer[start_index + len("Assistant:"):end_index]
-        # #     print(extracted_text)
-        # # else:
-        # #     print("未找到合适的内容.")
-        # pattern = r'Assistant: (.+?)(?:</s>|$)'
-
-        # # 使用findall函数提取匹配的内容
-        # matches = re.findall(pattern, answer)
-        # # 输出结果
-        # if matches!=[]:
-        #     assistant_text = matches[0]
-        # else:
-        #     assistant_text='无'
 
         template = (
             "A chat between a curious user and an artificial intelligence assistant. "
@@ -208,19 +181,8 @@ class DISCVFINLLMBloomz7B(DISCFINLLMBase):
         )
         inputs = self.tokenizer.encode_plus(template.format(prompt), return_tensors='pt')
         outputs = self.model.generate(**inputs.to(self.device), max_new_tokens=128, repetition_penalty=1.1)
-        # answer = self.tokenizer.decode(outputs[0]).replace(prompt, '')
         answer = self.tokenizer.decode(outputs[0])
-        # start_index = answer.find("Assistant:")
-        # end_index = answer.find("</s>")
-        # # 提取内容
-        # if start_index != -1 and end_index != -1:
-        #     extracted_text = answer[start_index + len("Assistant:"):end_index]
-        #     print(extracted_text)
-        # else:
-        #     print("未找到合适的内容.")
         pattern = r'Assistant: (.+?)(?:</s>|$)'
-
-        # 使用findall函数提取匹配的内容
         matches = re.findall(pattern, answer)
         # 输出结果
         if matches != []:
@@ -243,28 +205,16 @@ class FinGPTv3:
         self.model = AutoModel.from_pretrained(model_name_or_path, trust_remote_code=True).to(device)
         self.model = PeftModel.from_pretrained(self.model, peft_model)
         self.device =  device
+        
     def generate(self, prompt: str) -> str:
         tokens = self.tokenizer(prompt, return_tensors='pt', padding=True, max_length=512)
         res = self.model.generate(**tokens.to(self.device), max_length=512)
-        # res_sentences = [tokenizer.decode(i) for i in res]
         res_sentences = self.tokenizer.decode(res[0])
-        # print(res_sentences)
         answer = res_sentences.replace(prompt, '').strip()
-        # out_text = [o.split("答案：")[-1] for o in res_sentences]
+        
         return answer
 
 
 if __name__ == '__main__':
-    """
-    写的一些测试函数
-    """
-    # 原始模型
-    llm = DISCVFINLLMChatGLM26B()
-    llm.generate('你好')
-
-    # LORA模型
-    llm = DISCVFINLLMChatGLM26B(
-        lora_path="/remote-home/qswang/chatglm2/zero_nlp/chatglm_v2_6b_lora/output/fin_few_v1/checkpoint-1539"
-    )
-    llm.generate('你好')
+    pass
 
