@@ -86,7 +86,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 ![Image](./images/data_zh.png)
 
-| \scshape 数据集 | \scshape 数据量 | \begin{tabular}[r]{@{}r@{}}\scshape 输入长度  \end{tabular} | \begin{tabular}[r]{@{}r@{}}\scshape 输出长度 \end{tabular} |
+| 数据集 | 数据量 | 输入长度 | 输出长度  |
 |----------------:|----------------:|------------------------------------------------------------:|-----------------------------------------------------------:|
 |    金融咨询指令 |             63k |                                                          26 |                                                        369 |
 |    金融任务指令 |            110k |                                                         676 |                                                         35 |
@@ -104,7 +104,23 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 金融任务指令数据来源于两个部分：
 （1）金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
 
-| Dataset            | Major Task Type        | Minor Task Type           | \# Samples |
+| 数据集          | 主要任务类型       | 次要任务类型           | 数据量|
+|--------------------|------------------------|---------------------------|-----------:|
+| FPB                | 情感分析    | 情感分析        |      18690 |
+| FIQA-SA            | 情感分析    | 情感分析       |          - |
+| FNSC               | 情感分析    | 情感分析        |          - |
+| CCKS-NEC-2022      | 信息抽取 | 因果抽取      |       7499 |
+| SmoothNLP IEE      | 信息抽取 | 事件抽取         |       3256 |
+| SmoothNLP NHG      | 文本生成        | 文本生成           |       4642 |
+| CCKS2022-event     | 文本分类    | 事件类型分类 |       3578 |
+| Minds14            | 文本分类   | 意图识别        |      59143 |
+| Financial Report   | 信息抽取 | 实体抽取         |      61705 |
+| OpenKG             | 信息抽取 | 实体抽取            |       7672 |
+| OpenKG             | 信息抽取 | 实体抽取           |      67921 |
+| FDDC2018           | 翻译            | 术语翻译   |        333 |
+| Wealth-alpaca-lora | 文本生成     | 关键词生成       |      41825 |
+
+<!-- | Dataset            | Major Task Type        | Minor Task Type           | \# Samples |
 |--------------------|------------------------|---------------------------|-----------:|
 | FPB                | Sentiment Analysis     | Sentiment Analysis        |      18690 |
 | FIQA-SA            | Sentiment Analysis     | Sentiment Analysis        |          - |
@@ -118,7 +134,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | OpenKG             | Imformation Extraction | Entity Extraction         |       7672 |
 | OpenKG             | Imformation Extraction | Entity Extraction         |      67921 |
 | FDDC2018           | Translation            | Terminology Translation   |        333 |
-| Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 |
+| Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 | -->
 
 （2）金融无标签文本数据集。这是一个金融文本的阅读理解数据集。我们从东方财富网收集了共87k个文章，包括金融新闻和行业研报摘要。然后，基于这些无标签文本中的段落，我们利用ChatGPT得到指令对。
 
