@@ -86,6 +86,14 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 ![Image](./images/data_zh.png)
 
+| \scshape 数据集 | \scshape 数据量 | \begin{tabular}[r]{@{}r@{}}\scshape 输入长度  \end{tabular} | \begin{tabular}[r]{@{}r@{}}\scshape 输出长度 \end{tabular} |
+|----------------:|----------------:|------------------------------------------------------------:|-----------------------------------------------------------:|
+|    金融咨询指令 |             63k |                                                          26 |                                                        369 |
+|    金融任务指令 |            110k |                                                         676 |                                                         35 |
+|    金融计算指令 |             57k |                                                          73 |                                                        190 |
+|    检索增强指令 |             20k |                                                        1031 |                                                        521 |
+|    DISC-Fin-SFT |            246k |                                                         351 |                                                        198 |
+
 #### 金融咨询指令
 金融咨询指令数据来源于两部分：
 （1） 金融问答数据集。我们首先选择的金融问答数据集是FiQA，由于这是一个英文数据集且回答的答案质量存在一定的不足，因此我们将FiQA中的所有问题翻译成中文，并使用ChatGPT重新生成在中国背景下此问题的答案。除此之外，我们还根据200多个金融名词，针对每个名词让ChatGPT生成对应的问题，并要求在中国背景下回答这些问题。
@@ -116,6 +124,16 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 #### 金融计算指令
 在金融计算中，表达式计算器、方程求解器、正态概率表、计数器四种工具可以帮助模型完成大多数的计算任务。四种工具各有不同的调用命令、输入和输出。例如，计算器的命令是**[Calculator(expression)→result]**。在这一部分，构建金融计算指令的目的就是训练模型在合适的时候调用这些工具解决数学问题。四个工具的定义如下表所示：
+| 工具名称     | 工具描述                                   |
+|--------------|--------------------------------------------|
+| 表达式计算器 | 输入：初等函数的数学表达式                 |
+|              | 输出：表达式的计算结果（小数表示）         |
+| 方程求解器   | 输入：方程组                               |
+|              | 输出：方程组的解                           |
+| 计数器       | 输入：包含数据样本的数组                   |
+|              | 输出：样本数量                             |
+| 概率表       | 输入：数字                                 |
+|              | 输出：正态分布累积分布函数在这个数字处的值 |
 
 #### 检索增强指令
 检索增强指令的构造分为三步。第一步，我们根据新闻和研报等金融文本构造金融分析问题。第二步，我们在知识库中检索与问题有关的文档，其中参考文档源于我们构建金融知识库，包含18k研报和69k金融新闻。第三步，我们将问题和参考资料结合在一起，生成问题的答案。在这个过程中，问题和答案是由ChatGPT通过Chain-of-Retrieval (CoR) prompting方法生成的。最终我们构建了一个由20k条检索增强指令组成的数据集，其中的指令涵盖了金融领域中主要的分析形式，包括行业分析、政策分析、投资建议、公司战略规划等。
@@ -369,22 +387,55 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 #### 金融NLP任务评测
 我们使用FinCUGE评估基准测试模型处理金融NLP任务的能力。这个评测一共包含八项任务，其中包括情感分析、关系抽取、文本摘要、文本分类、事件抽取和其他任务。我们通过提示模板将这个数据集改造为小样本（few-shot）形式，使用常用的准确度（accuracy）、F1和Rouge指标评价模型的表现，来衡量模型在金融领域中理解文本和生成相关回答的能力。评测结果（%）如下：
+|  模型   ↓  --评测集 →  | FinFE (Accuracy) | FinQA (F1) | FinCQA (F1) | FinNA (ROUGE) | FinRE (F1) | FinESE (F1) | 平均值 |
+|:-----------------:|:----------------:|:----------:|:-----------:|:-------------:|:----------:|:-----------:|:------:|
+| Baichuan-13B-Chat |       64.8       |    38.1    |     33.6    |      31.0     |     9.1    |     18.6    |  31.0  |
+|            (LoRA) |       69.3       |    42.4    |     42.0    |      30.9     |    10.1    |     45.3    |  40.0  |
+|           ChatGLM |       56.7       |    31.8    |     35.1    |      32.5     |    13.0    |     48.7    |  36.3  |
+|            (LoRA) |       60.7       |    41.4    |     36.4    |      34.7     |    10.7    |     46.2    |  38.4  |
+|          ChatGLM2 |       61.3       |    28.8    |     35.9    |      28.9     |    11.7    |     42.1    |  34.8  |
+|            (LoRA) |       65.3       |    37.6    |     36.4    |      33.4     |    11.8    |     39.5    |  37.3  |
 
 **你可以在这里查看我们[金融NLP任务评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/evaluator)**的具体内容。
 
 #### 人类试题评测
 我们使用了FIN-Eval基准评估模型在回答真人生成的金融问题上的能力，这个基准涵盖了金融、经济、会计、证书等学科的高质量多项选择题。我们以准确度为指标，来衡量模型的表现。评测结果（%）如下：
+| 模型                     | 金融 | 经济 | 会计 | 证书 | 平均值 |
+|--------------------------|-----:|-----:|-----:|-----:|-------:|
+| GPT-4                    | 71.0 | 74.5 | 59.3 | 70.4 |   68.6 |
+| ChatGPT                  | 59.3 | 61.6 | 45.2 | 55.1 |   55.0 |
+| Baichuan-13B-Base        | 52.6 | 50.2 | 43.4 | 53.5 |   50.1 |
+| Baichuan-13B-Chat        | 51.6 | 51.1 | 41.7 | 52.8 |   49.4 |
+| ChatGLM2-6B              | 46.5 | 46.4 | 44.5 | 51.5 |   47.4 |
+| InternLM-7B              | 49.0 | 49.2 | 40.5 | 49.4 |   47.1 |
+| InternLM-Chat-7B         | 48.4 | 49.1 | 40.8 | 49.5 |   47.0 |
+| LLaMA-2-Chat-70B         | 47.1 | 46.7 | 41.5 | 45.7 |   45.2 |
+| FinGPT-v3-6B             | 50.5 | 42.5 | 50.8 | 52.1 |   49.6 |
+| DISC-FinLLM （金融咨询） | 54.4 | 45.4 | 52.8 | 51.8 |   51.6 |
+| DISC-FinLLM （金融任务） | 57.4 | 48.8 | 49.5 | 49.7 |   51.5 |
+| DISC-FinLLM （检索增强） | 56.1 | 44.0 | 49.5 | 50.6 |   50.6 |
+| DISC-FinLLM （金融计算） | 54.8 | 50.2 | 46.9 | 50.6 |   50.9 |
+| DISC-FinLLM （全数据）   | 53.8 | 47.9 | 42.0 | 49.1 |   48.7 |
 
 
 #### 资料分析评测
 我们手动构造了一个由100个财经计算题组成的数据集，用于评估模型在计算任务中的能力。这些测评问题改编自中国行政职业能力测验中的材料分析计算题，包括计算同比增长率和产值比例等。我们根据模型给出计算公式和计算结果的正确率来评估模型的表现。评测结果如下：
+|                          | 计算公式 | 计算公式与结果 |
+|--------------------------|:--------:|:--------------:|
+| GPT-3.5-turbo            |   0.28   |      0.26      |
+| Baichuan-13B-Chat        |   0.20   |      0.12      |
+| DISC-FinLLM （金融计算） |   0.35   |      0.35      |
 
 
 #### 时事分析评测
 此评测基于GPT-4模型作出评估。我们构建了一个金融问题数据集，其中的问题需要模型使用最新信息来获得准确答案。然后我们在谷歌等搜索引擎中手动搜索，以收集与每个问题相关的多个参考文段。该数据集旨在评估出模型在回答金融问题时检索信息的相关性和准确性，我们用四个指标评价模型的表现，即准确性、实用性、语言质量和思考性。评测结果如下：
+|                          | 准确性 | 实用性 | 语言质量 | 思考性 |
+|--------------------------|:------:|:------:|:--------:|:------:|
+| Baichuan13B-Chat         |  4.08  |  4.15  |   4.21   |  3.88  |
+| DISC-FinLLM （检索增强） |  4.13  |  4.29  |   4.33   |  3.95  |
 
 
-**你可以在这里查看我们[资料分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/)、[时事分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/)**的数据集。
+**你可以在这里查看我们[资料分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/computing_eval.json)、[时事分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/retriever_eval.json)**的数据集。
 
 <!-- ### 主观评测
 
@@ -394,7 +445,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 **你可以在这里查看我们的[主观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/subjective_eval)** -->
 
-### 评测结果
+<!-- ### 评测结果
 
 客观题评测采用 few-shot 方式，结果（%）如下：
 
@@ -421,7 +472,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 |      LawGPT      | 3.02 | 2.58 | 2.96 | 2.86 |
 |   Lawyer LLaMa   | 3.13 | 2.83 | 3.35 | 3.10 |
 |     ChatLaw      | 3.31 | 2.90 | 3.35 | 3.19 |
-|   DISC-LawLLM    | **3.46** | 3.12 | **3.59** | **3.39** |
+|   DISC-LawLLM    | **3.46** | 3.12 | **3.59** | **3.39** | -->
 
 ## 致谢
 
@@ -431,12 +482,12 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 - [**Langchain-Chatchat**](https://github.com/chatchat-space/Langchain-Chatchat)
 - [**LLaMA Efficient Tuning**](https://github.com/hiyouga/LLaMA-Efficient-Tuning)
 - [**FireFly**](https://github.com/yangjianxin1/Firefly)
-
+- [**FinEval**](https://github.com/SUFE-AIFLM-Lab/FinEval)
 同样感谢其他限于篇幅未能列举的为本项目提供了重要帮助的工作。
 
 ## 声明
 
-DISC-LawLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽管它能够在许多任务和情境上提供法律服务，但模型应当仅供用户参考使用，并不能替代专业律师和法律专家，我们希望 DISC-LawLLM 的用户以批判性的眼光去评估模型。我们不对因使用 DISC-LawLLM 所引发的任何问题、风险或不良后果承担责任。
+DISC-FinLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽管它能够在许多任务和情境上提供金融领域的服务，但模型应当仅供用户参考使用，并不能替代专业金融分析师和金融专家，我们希望使用 DISC-FinLLM 的用户以批判性的眼光去评估模型。我们不对因使用 DISC-FinLLM 所引发的任何问题、风险或不良后果承担责任。
 
 ## 引用
 
@@ -455,13 +506,13 @@ DISC-LawLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽�
 
 ## 协议
 
-DISC-LawLLM 可在 Apache 许可证下使用。请查看 [LICENSE](./LICENSE) 文件获取更多信息。
+DISC-FinLLM 可在 Apache 许可证下使用。请查看 [LICENSE](./LICENSE) 文件获取更多信息。
 
 
-## Star History
+<!-- ## Star History
 
 <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date&theme=dark" />
     <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
-</picture>
+</picture> -->
