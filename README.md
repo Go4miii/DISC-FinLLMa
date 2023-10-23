@@ -7,7 +7,7 @@ ZH | [EN](./README-en.md)
 [![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
-[Demo](https://fin.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
+[Demo](https://finllm.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
 
 </div>
 
@@ -18,7 +18,7 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 * [DISC-FinLLM 模型参数](https://huggingface.co/Go4miii/DISC-FinLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
-您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
+您可以通过访问这个[链接](https://finllm.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
 
 
 
@@ -409,7 +409,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 此评测基于GPT-3.5模型作出评估。我们构建了一个金融问题数据集，其中的问题需要模型使用最新信息来获得准确答案。然后我们在谷歌等搜索引擎中手动搜索，以收集与每个问题相关的多个参考文段。该数据集旨在评估出模型在回答金融问题时检索信息的相关性和准确性，我们用四个指标评价模型的表现，即准确性、实用性、语言质量和思考性。评测结果如下：
 |                          | 准确性 | 实用性 | 语言质量 | 思考性 |
 |--------------------------|:------:|:------:|:--------:|:------:|
-| Baichuan13B-Chat         |  4.08  |  4.15  |   4.21   |  3.88  |
+| Baichuan-13B-Chat         |  4.08  |  4.15  |   4.21   |  3.88  |
 | DISC-FinLLM （检索增强） |  4.13  |  4.29  |   4.33   |  3.95  |
 
 
