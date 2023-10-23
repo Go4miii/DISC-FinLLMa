@@ -2,6 +2,7 @@ import argparse
 
 from evaluate import *
 from finllm import *
+from utils import *
 
 
 model_lists = {

@@ -1,34 +1,8 @@
-# from abc import ABCMeta, abstractmethod
-# import json
-# from typing import Tuple, List, Any
-# import os
-# import re
-# import nltk
-# import random
-
-# from utils import _remove_punctuation, _mixed_segmentation, _find_lcs
-
-# random.seed(123)
-# from utils import *
-# from finllm import DISCVFINLLMBloomz7B
-# from finllm import DISCVFINLLMBaichuan7B
-# from finllm import DISCVFINLLMBaichuan13BBase
-# from finllm import DISCVFINLLMBaichuan13BChat
-# from finllm import DISCVFINLLMChatGLM26B
-# from finllm import DISCVFINLLMChatGLM6B
-# from finllm import FinGPTv3
-# import finllm
-# import random
-# random.seed(123)
-# from tqdm import tqdm
-# import time
-# import requests
-# import argparse
-
 import os
 from tqdm import tqdm
 
-from utils import *
+from utils import _remove_punctuation, _mixed_segmentation, _find_lcs, write_json, load_json, extract_questions_and_text, _compute_f1_score, compute
+
 
 DATA_PATH = 'data/fincuge'
 INSTRUCT_SAMPLES = load_json('data/fincuge/instruct_samples.json')
