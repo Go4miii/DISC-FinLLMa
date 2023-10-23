@@ -7,7 +7,7 @@ ZH | [EN](./README-en.md)
 [![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
-[Demo](https://law.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
+[Demo](https://fin.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
 
 </div>
 
@@ -92,7 +92,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 
 #### 金融任务指令
 金融任务指令数据来源于两个部分：
-- 金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
+- 金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
 
 | 数据集          | 主要任务类型       | 次要任务类型           | 数据量|
 |--------------------|------------------------|---------------------------|-----------:|
@@ -488,10 +488,3 @@ DISC-FinLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽�
 DISC-FinLLM 可在 Apache 许可证下使用。请查看 [LICENSE](./LICENSE) 文件获取更多信息。
 
 
-<!-- ## Star History
-
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
-</picture> -->

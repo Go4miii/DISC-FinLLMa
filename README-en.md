@@ -7,109 +7,96 @@ ZH | [EN](./README-en.md)
 [![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
-[Demo](https://law.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
+[Demo](https://law.fudan-disc.com) | [Technical Report](https://arxiv.org/abs/2309.11325)
 
 </div>
 
-DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能、全面的**金融咨询服务**的金融领域大模型，由[复旦大学数据智能与社会计算实验室 (Fudan-DISC)](http://fudan-disc.com) 开发并开源。
+DISC-FinLLM is a large model in the financial field specifically designed to provide users with professional, intelligent, and comprehensive **financial consulting services** in financial scenarios. It is developed by[Fudan University Data Intelligence and Social Computing Laboratory (Fudan-DISC)](http://fudan-disc.com) developed and open source.
 
-我们将在该项目中开源如下资源：
-* [DISC-FinLLM 模型参数](https://huggingface.co/ShengbinYue/DISC-LawLLM)
+We will open source the following resources in this project:
+* [DISC-FinLLM model parameters](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
-您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
+You can experience our DISC-FinLLM online by visiting this [link](https://fin.fudan-disc.com).
 
 
 
 ## 目录
 
-- [概述](#概述)
-- [模型微调](#模型微调)
-- [推理和部署](#推理和部署)
+- [Overview](#overview)
+- [Model Fine-tuning](#model-fine-tuning)
+- [Inference and Deployment](#inference-and-deployment)
 - [DISC-Fin-Eval Benchmark](#disc-fin-eval-benchmark)
-- [致谢](#致谢)
-- [声明](#声明)
-- [引用](#引用)
-- [协议](#协议)
+- [Acknowledgements](#acknowledgements)
+- [Disclaimer](#disclaimer)
+- [Citation](#citation)
+- [License](#license)
 
-## 概述
+## Overview
 
 ![Image](./images/model_zh.png)
 
 <p></p>
 
-DISC-FinLLM是一个金融领域的大语言模型，是由面向不同金融场景的4个模组：金融咨询、金融文本分析、金融计算、金融知识检索问答构成的多专家智慧金融系统。这些模组分别在金融NLP任务、人类试题、资料分析和时事分析等四个评测中展现出明显优势，证明了DISC-FinLLM能为广泛的金融领域提供强有力的支持。DISC-FinLLM能在不同应用场景下提供帮助，可用于实现不同的功能：
+DISC-FinLLM is a large language model in the financial field. It is a multi-expert smart financial system composed of four modules for different financial scenarios: financial consulting, financial text analysis, financial calculation, and financial knowledge retrieval and question answering. These modules showed clear advantages in four evaluations including financial NLP tasks, human test questions, data analysis and current affairs analysis, proving that DISC-FinLLM can provide strong support for a wide range of financial fields. DISC-FinLLM can help in different application scenarios and can be used to implement different functions:
 
-* **金融咨询：** 该模组可以在中国金融语境下，与用户展开关于金融话题的多轮对话，或是为用户解释金融专业的相关知识，是由数据集中的金融咨询指令部分训练而来。
-* **金融文本分析：** 该模组可以帮助用户在金融文本上完成的信息抽取、情感分析、文本分类、文本生成等NLP任务，是由数据集中的金融任务指令部分训练而来。
-* **金融计算：** 该模组可以帮助用户完成与数学计算相关的任务，除了利率、增长率等基本计算，它还支持统计分析和包括Black-Scholes期权定价模型、EDF预期违约概率模型在内的金融模型计算。这一模组是由数据集中的金融计算指令部分训练而来。
-* **金融知识检索问答：** 该模组可以基于金融新闻、研报和相关政策文件为用户提供投资建议、时事分析、政策解读。它是由数据集中的检索增强指令部分训练而来。
-
-
+* **Financial Consultation:** This module can start multiple rounds of dialogue with users on financial topics in the Chinese financial context, or explain relevant knowledge of financial majors to users. It is composed of the financial consultation instructions part of the data set. Came for training.
+* **Financial Text Analysis:** This module can help users complete NLP tasks such as information extraction, sentiment analysis, text classification, and text generation on financial texts. It is trained by the financial task instructions in the data set.
+* **Financial Calculation:** This module can help users complete tasks related to mathematical calculations. In addition to basic calculations such as interest rates and growth rates, it also supports statistical analysis and includes the Black-Scholes option pricing model and the EDF expected default probability model. Financial model calculations included. This module is partially trained from the financial calculation instructions in the data set.
+* **Financial Knowledge Retrieval Q&A:** This module can provide users with investment advice, current affairs analysis, and policy interpretation based on financial news, research reports, and related policy documents. It is partially trained from the retrieval enhancement instructions in the dataset.
 
 
-### 模型效果演示
 
-#### 金融咨询
+
+### Model effect demonstration
+
+#### Financial Consultation
 
 ![consult_demo](./images/example_consult.gif)
 
-#### 金融文本分析
+#### Financial Text Analysis
 
 ![document_demo](./images/example_task.gif)
 
-#### 金融计算
+#### Financial Calculation
 
 ![tool_demo](./images/example_tool.gif)
 
-#### 金融知识检索问答
+#### Financial Knowledge Retrieval Q&A
 
 ![exam_ref_demo](./images/example_retrieval.gif)
 
 
 
-### DISC-Fin-SFT 数据集
-DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用领域中文大模型Baichuan-13B-Chat上进行LoRA指令微调得到的金融大模型。DISC-Fin-SFT总共包含约25万条数据，分为四个子数据集，它们分别是金融咨询指令、金融任务指令、金融计算指令、检索增强指令。
+### DISC-Fin-SFT Dataset
+DISC-FinLLM is a large financial model based on the high-quality financial data set DISC-Fin-SFT we constructed and fine-tuned the LoRA instruction on the general-domain Chinese large model Baichuan-13B-Chat. DISC-Fin-SFT contains a total of about 250,000 pieces of data, divided into four sub-data sets, which are financial consulting instructions, financial task instructions, financial computing instructions, and retrieval-enhanced instructions.
 
 ![Image](./images/data_zh.png)
 
-| 数据集 | 数据量 | 输入长度 | 输出长度  |
+| Dataset | Samples | Input Length | Output Length  |
 |----------------:|----------------:|------------------------------------------------------------:|-----------------------------------------------------------:|
-|    金融咨询指令 |             63k |                                                          26 |                                                        369 |
-|    金融任务指令 |            110k |                                                         676 |                                                         35 |
-|    金融计算指令 |             57k |                                                          73 |                                                        190 |
-|    检索增强指令 |             20k |                                                        1031 |                                                        521 |
+|    Financial Consulting Instructions |             63k |                                                          26 |                                                        369 |
+|    Financial Task Instructions |            110k |                                                         676 |                                                         35 |
+|    Financial Computing Instructions |             57k |                                                          73 |                                                        190 |
+|    Retrieval-enhanced Instructions |             20k |                                                        1031 |                                                        521 |
 |    DISC-Fin-SFT |            246k |                                                         351 |                                                        198 |
 
-#### 金融咨询指令
-金融咨询指令数据来源于三部分：
-- 这是一个英文的金融问答数据集，其中回答的答案质量参差不齐。因此我们将FiQA中的所有问题翻译成中文，并使用ChatGPT重新生成问题的答案，来提高这一数据集的质量。
-- 金融名词解释。我们在网上收集了200多个金融领域的专业术语（如：杠杆收购），然后使用令ChatGPT为这些专业词汇生成相应的问答对，用以训练模型对金融用语的理解。
-- 经管之家论坛上的公开发帖。我们利用self-chat prompting方法引导ChatGPT围绕帖子主题生成多轮的问答。
+#### Financial Consulting Instructions
 
-在引导ChatGPT生成数据的过程中，我们通过精心设计的prompt确保生成的问答符合中国的国情、立场、态度和语言风格。
+Financial advisory directive data comes from three parts:
+- This is an English financial question and answer dataset where the quality of the answers varies. Therefore, we translated all questions in FiQA into Chinese and used ChatGPT to regenerate the answers to the questions to improve the quality of this data set.
+- Explanation of financial terms. We collected more than 200 professional terms in the financial field (such as leveraged buyout) from the Internet, and then used ChatGPT to generate corresponding question and answer pairs for these professional terms to train the model to understand financial terms.
+- Public posting on the Economic Management Forum. We use the self-chat prompting method to guide ChatGPT to generate multiple rounds of questions and answers around the post topic.
 
-#### 金融任务指令
-金融任务指令数据来源于两个部分：
-- 金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
+In the process of guiding ChatGPT to generate data, we ensured that the generated questions and answers were in line with China's national conditions, stance, attitude and language style through carefully designed prompts.
 
-| 数据集          | 主要任务类型       | 次要任务类型           | 数据量|
-|--------------------|------------------------|---------------------------|-----------:|
-| FPB                | 情感分析    | 情感分析        |      18690 |
-| FIQA-SA            | 情感分析    | 情感分析       |          - |
-| FNSC               | 情感分析    | 情感分析        |          - |
-| CCKS-NEC-2022      | 信息抽取 | 因果抽取      |       7499 |
-| SmoothNLP IEE      | 信息抽取 | 事件抽取         |       3256 |
-| SmoothNLP NHG      | 文本生成        | 文本生成           |       4642 |
-| CCKS2022-event     | 文本分类    | 事件类型分类 |       3578 |
-| Minds14            | 文本分类   | 意图识别        |      59143 |
-| Financial Report   | 信息抽取 | 实体抽取         |      61705 |
-| OpenKG             | 信息抽取 | 实体抽取            |       7672 |
-| OpenKG             | 信息抽取 | 实体抽取           |      67921 |
-| FDDC2018           | 翻译            | 术语翻译   |        333 |
-| Wealth-alpaca-lora | 文本生成     | 关键词生成       |      41825 |
+#### Financial Task Instructions
+Financial task order data comes from two parts:
 
-<!-- | Dataset            | Major Task Type        | Minor Task Type           | \# Samples |
+- Financial NLP dataset. This part is based on the existing financial NLP data set and adapted from manually written prompts. We have collected more than ten open source NLP Chinese data sets, which can be divided into categories such as sentiment analysis, information extraction, text generation, text classification and translation. The distribution of this data set looks like this:
+
+
+| Dataset            | Major Task Type        | Minor Task Type           | # Samples |
 |--------------------|------------------------|---------------------------|-----------:|
 | FPB                | Sentiment Analysis     | Sentiment Analysis        |      18690 |
 | FIQA-SA            | Sentiment Analysis     | Sentiment Analysis        |          - |
@@ -123,12 +110,12 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | OpenKG             | Imformation Extraction | Entity Extraction         |       7672 |
 | OpenKG             | Imformation Extraction | Entity Extraction         |      67921 |
 | FDDC2018           | Translation            | Terminology Translation   |        333 |
-| Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 | -->
+| Wealth-alpaca-lora | Text Generation     | Keyword Generation        |      41825 |
 
-- 金融无标签文本数据集。这是一个金融文本的阅读理解数据集。我们从东方财富网收集了共87k个文章，包括金融新闻和行业研报摘要。然后，基于这些无标签文本中的段落，我们利用ChatGPT得到指令对。
+- Financial unlabeled text dataset. This is a reading comprehension data set of financial texts. We collected a total of 87k articles from Oriental Fortune Network, including financial news and industry research report summaries. Then, based on the paragraphs in these unlabeled texts, we use ChatGPT to obtain instruction pairs.
 
-#### 金融计算指令
-在金融计算中，表达式计算器、方程求解器、正态概率表、计数器四种工具可以帮助模型完成大多数的计算任务。四种工具各有不同的调用命令、输入和输出。例如，计算器的命令是 **[Calculator(expression)→result]**。在这一部分，构建金融计算指令的目的就是训练模型在合适的时候调用这些工具解决数学问题。四个工具的定义如下表所示：
+#### Financial Computing Instructions
+In financial calculations, four tools, expression calculator, equation solver, normal probability table, and counter, can help models complete most calculation tasks. Each of the four tools has different calling commands, inputs and outputs. For example, the calculator command is **[Calculator(expression)→result]**. In this part, the purpose of building financial calculation instructions is to train the model to call these tools to solve mathematical problems when appropriate. The definitions of the four tools are shown in the table below:
 | 工具名称     | 工具描述                                   |
 |--------------|--------------------------------------------|
 | 表达式计算器 | 输入：初等函数的数学表达式                 |
@@ -140,7 +127,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | 概率表       | 输入：数字                                 |
 |              | 输出：正态分布累积分布函数在这个数字处的值 |
 
-#### 检索增强指令
+#### Retrieval-enhanced Instructions
 检索增强指令的构造分为三步。第一步，我们根据新闻和研报等金融文本构造金融分析问题。第二步，我们在知识库中检索与问题有关的文档，其中参考文档源于我们构建金融知识库，包含18k研报和69k金融新闻。第三步，我们将问题和参考资料结合在一起，生成问题的答案。在这个过程中，问题和答案是由ChatGPT通过Chain-of-Retrieval (CoR) prompting方法生成的。最终我们构建了一个由20k条检索增强指令组成的数据集，其中的指令涵盖了金融领域中主要的分析形式，包括行业分析、政策分析、投资建议、公司战略规划等。
 
 我们开源了部分数据集，您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
@@ -487,10 +474,3 @@ DISC-FinLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽�
 DISC-FinLLM 可在 Apache 许可证下使用。请查看 [LICENSE](./LICENSE) 文件获取更多信息。
 
 
-<!-- ## Star History
-
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FudanDISC/DISC-LawLLM&type=Date" />
-</picture> -->
