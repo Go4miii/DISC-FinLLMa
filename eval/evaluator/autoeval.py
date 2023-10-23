@@ -8,7 +8,7 @@ model_lists = {
     'chatglm-6b': DISCVFINLLMChatGLM6B,
     'chatglm2-6b': DISCVFINLLMChatGLM26B,
     'baichuan-7b': DISCVFINLLMBaichuan7B,
-    'baichuan-13b': DISCVFINLLMBaichuan13BBase,
+    'baichuan-13b-base': DISCVFINLLMBaichuan13BBase,
     'baichuan-13b-chat': DISCVFINLLMBaichuan13BChat,
     'bloomz-7b': DISCVFINLLMBloomz7B,
     'fingpt-v3': FinGPTv3,
