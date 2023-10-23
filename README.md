@@ -4,7 +4,7 @@ ZH | [EN](./README-en.md)
 
 <h1>DISC-FinLLM</h1>
   
-[![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/ShengbinYue/DISC-LawLLM)
+[![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/Go4miii/DISC-FinLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
 [Demo](https://finllm.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
@@ -16,7 +16,7 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 我们将在该项目中开源如下资源：
 * [DISC-FinLLM-SFT 训练数据样例](./data)
 * [DISC-FinLLM 模型参数](https://huggingface.co/Go4miii/DISC-FinLLM)
-* [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
+* [DISC-Fin-Eval Benchmark](./eval)
 
 您可以通过访问这个[链接](https://finllm.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
 
@@ -207,30 +207,6 @@ messages = [
 response = model.chat(tokenizer, messages)
 print(response)
 ```
-<!-- #### LoRA模型
-
-```python
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers.generation.utils import GenerationConfig
-from peft import PeftModel, PeftConfig
-
-model_path = "baichuan-inc/Baichuan-13B-Chat"
-model = AutoModelForCausalLM.from_pretrained(
-    model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True
-)
-model.generation_config = GenerationConfig.from_pretrained(model_path)
-tokenizer = AutoTokenizer.from_pretrained(
-    model_path, use_fast=False, trust_remote_code=True,
-)
-model = PeftModel.from_pretrained(model, lora_path)
-
-messages = [
-    {"role": "user", "content": "请解释一下什么是银行不良资产？"},
-]
-response = model.chat(tokenizer, messages)
-print(response)
-``` -->
 
 
 ### 命令行工具
@@ -249,113 +225,6 @@ streamlit run web_demo.py --server.port 8888
 
 此外，目前版本的 DISC-FinLLM 是以 Baichuan-13B 作为基座的，您可以参照 [Baichuan-13B](https://github.com/baichuan-inc/Baichuan-13B) 的介绍来进行 int8 或 int4 量化推理部署以及 CPU 部署。
 
-<!-- ## 模型微调
-
-针对金融领域的不同功能，我们采用了多专家微调的训练策略。我们在特定的子数据集上训练模型的各个模组，使它们彼此互不干扰，独立完成不同任务。为此，我们使用DDP技术的Low-rank adaption（LoRA）方法高效地进行参数微调。
-
-具体来说，我们以Baichuan-13B为基座模型，通过数据集的四个部分，分别训练4个LoRA专家模组，如图12所示。部署时，用户只需更换在当前基座上的LoRA参数就可以切换功能。因此用户能够根据使用需求激活/停用模型的不同模组，而无需重新加载整个模型。4个LoRA专家模组分别如下：
-- 金融顾问：该模型用于多轮对话。由于我们的金融咨询指令数据十分丰富，该模型可以在中国的金融语境下做出高质量的回答，为用户解答金融领域的专业问题，提供优质的咨询服务。
-- 文件分析师：该模型主要用于处理金融自然语言处理领域内的各种任务，包括但不限于金融文本中的信息抽取、情绪分析等。
-- 财务会计师：DISC-FinLLM支持四种工具，即表达式计算器、方程求解器、计数器和概率表。这些工具支持我们的模型完成金融领域的大多数的计算任务，如金融数学建模、统计分析等。当模型需要使用工具时，它可以生成工具调用命令，然后中断解码，并将工具调用结果添加到生成的文本中。这样，DISC-FinLLM就可以借助工具提供的准确计算结果，回答金融中的计算问题。
-- 时事分析师：我们在第四个LoRA训练中引入检索插件。DISC-FinLLM主要参考了三类金融文本：新闻、报告和政策。当用户问及时事、行业趋势或金融政策等常见金融话题时，我们的模型可以检索相关文件，并像金融专家一样展开分析并提供建议。 -->
-
-
-<!-- 开发者可以对 DISC-FinLLM 进行微调使用。在此可以参照与 DISC-LawLLM 兼容的微调工具 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 或是我们的 [DISC-MedLLM](https://github.com/FudanDISC/DISC-MedLLM) 医疗大模型。我们以 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 为例给出**全量**和 **LoRA** 两种微调示例。
-
-首先，下载 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 并按其要求[安装依赖](https://github.com/hiyouga/LLaMA-Efficient-Tuning#getting-started)。注意训练数据按照项目中的要求进行处理。下面我们给出两种微调场景下的脚本样例。
-
-### 全量微调
-
-我们在 8 * Nvidia A800 80 GB + deepspeed 的环境下进行了全量微调测试。训练启动脚本示例如下：
-
-```
-deepspeed --num_gpus=8 src/train_bash.py \
-    --stage sft \
-    --model_name_or_path S heng bin \
-    --do_train \
-    --dataset alpaca_gpt4_zh \
-    --template baichuan \
-    --finetuning_type full \
-    --output_dir path_to_your_sft_checkpoint \
-    --overwrite_cache \
-    --per_device_train_batch_size 4 \ 
-    --per_device_eval_batch_size 4 \ 
-    --gradient_accumulation_steps 8 \ 
-    --preprocessing_num_workers 8 \
-    --lr_scheduler_type cosine \
-    --logging_steps 10 \
-    --save_steps 100 \
-    --eval_steps 100 \
-    --learning_rate 5e-5 \
-    --max_grad_norm 0.5 \
-    --num_train_epochs 2.0 \
-    --dev_ratio 0.01 \
-    --evaluation_strategy steps \
-    --load_best_model_at_end \
-    --plot_loss \
-    --fp16 \
-    --deepspeed deepspeed.json
-```
-
-`deep_speed.json` 配置示例如下：
-
-```json
-{
-    "train_micro_batch_size_per_gpu": "auto",
-    "zero_allow_untested_optimizer": true,
-    "fp16": {
-        "enabled": "auto",
-        "loss_scale": 0,
-        "initial_scale_power": 16, 
-        "loss_scale_window": 1000,
-        "hysteresis": 2,
-        "min_loss_scale": 1
-    },  
-    "zero_optimization": {
-        "stage": 2,
-        "allgather_partitions": true,
-        "allgather_bucket_size": 5e8,
-        "overlap_comm": false,
-        "reduce_scatter": true,
-        "reduce_bucket_size": 5e8,
-        "contiguous_gradients" : true
-    }
-}
-```
-
-### LoRA 微调
-
-我们在 4 * Nvidia A800 80G 显卡上进行了 LoRA 微调测试。训练启动脚本示例如下：
-
-```
-torchrun --nproc_per_node 4 src/train_bash.py \
-    --stage sft \
-    --model_name_or_path ShengbinYue/DISC-LawLLM \
-    --do_train \
-    --dataset alpaca_gpt4_zh \
-    --template baichuan \
-    --finetuning_type lora \
-    --lora_rank 8 \ 
-    --lora_target W_pack \
-    --output_dir path_to_your_sft_checkpoint \
-    --overwrite_cache \
-    --per_device_train_batch_size 4 \ 
-    --per_device_eval_batch_size 4 \ 
-    --gradient_accumulation_steps 8 \ 
-    --preprocessing_num_workers 16 \
-    --lr_scheduler_type cosine \
-    --logging_steps 10 \
-    --save_steps 100 \
-    --eval_steps 100 \
-    --learning_rate 1e-5 \
-    --max_grad_norm 0.5 \
-    --num_train_epochs 2.0 \
-    --dev_ratio 0.01 \
-    --evaluation_strategy steps \
-    --load_best_model_at_end \
-    --plot_loss \
-    --fp16
-``` -->
 
 ## DISC-Fin-Eval-Benchmark
 
@@ -415,42 +284,6 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 **你可以在这里查看我们[资料分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/computing_eval.json)、[时事分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/retriever_eval.json)的数据集。**
 
-<!-- ### 主观评测
-
-在主观评测部分，我们采用问答题形式进行评估，模拟主观考试问题的过程。我们从法律咨询、在线论坛、与司法相关的出版物和法律文件中手工构建了一个高质量的测试集。我们用 GPT-3.5 Turbo 作为裁判模型来评估模型的输出，并基于标准答案用准确性、完整性和清晰度这三个标准提供 1-5 的评分。
-
-主观题数据集从来源于法律咨询、网上发帖、司法相关出版物和法律文书中手动构建的一个高质量的测试集，其中包括 300 个示例，涵盖了法律知识问答、法律咨询和判决预测等场景。
-
-**你可以在这里查看我们的[主观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/subjective_eval)** -->
-
-<!-- ### 评测结果
-
-客观题评测采用 few-shot 方式，结果（%）如下：
-
-|        模型        |  NJE 单选   |  NJE 多选   |  PAE 单选   |  PAE 多选   |  CPA 单选   |  CPA 多选   | UNGEE 单选  | UNGEE 多选  |  PFE 单选   |  LBK 单选   |   平均   |
-|:----------------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
-|     ChatGLM      |   31.66   |   1.08    |   27.97   |   2.90    |   37.06   |   13.33   |   39.69   |   20.69   |   37.65   |   42.91   |   24.66   |
-|  Baichuan-Chat   |   31.47   |   10.15   |   29.66   |   8.70    |   35.53   |   19.17   |   50.00   |   27.59   |   53.12   |   53.45   |   30.78   |
-| Chinese-Alpaca-2 |   25.70   |   10.15   |   30.51   |   11.59   |   32.99   |   19.17   |   40.94   |   21.84   |   44.12   |   43.27   |   26.73   |
-|  GPT-3.5-turbo   |   36.50   |   10.58   |   37.29   |   17.03   | **42.13** | **21.67** | **51.25** | **28.74** |   53.53   |   54.18   |   34.10   |
-|     LexiLaw      |   20.11   |   7.56    |   23.73   |   10.14   |   24.87   |   19.17   |   31.56   |   16.09   |   31.76   |   40.36   |   21.50   |
-|      LawGPT      |   22.91   |   6.26    |   31.36   |   7.61    |   25.38   |   16.67   |   30.31   |   13.79   |   34.71   |   29.09   |   20.60   |
-|   Lawyer LLaMa   |   35.75   |   5.62    |   32.20   |   6.52    |   29.95   |   13.33   |   32.50   |   14.94   |   39.41   |   39.64   |   25.05   |
-|     ChatLaw      |   27.56   |   7.99    |   31.36   |   9.42    |   35.53   |   11.67   |   35.62   |   17.24   |   42.35   |   41.09   |   25.20   |
-|   DISC-LawLLM    | **42.09** | **19.87** | **40.68** | **18.48** |   39.59   |   19.17   |   50.94   |   25.29   | **57.06** | **54.91** | **37.10** |
-
-主观题评测分数为 1-5，结果如下：
-
-|        模型        | 准确性  | 完整性  | 清晰性  |  平均  |
-|:----------------:|:----:|:----:|:----:|:----:|
-|     ChatGLM      | 2.64 | 2.75 | 3.23 | 2.87 |
-|  Baichuan-Chat   | 3.22 | **3.34** | 3.18 | 3.25 |
-| Chinese-Alpaca-2 | 3.13 | 3.23 | 3.17 | 3.17 |
-|     LexiLaw      | 3.06 | 2.62 | 3.00 | 2.90 |
-|      LawGPT      | 3.02 | 2.58 | 2.96 | 2.86 |
-|   Lawyer LLaMa   | 3.13 | 2.83 | 3.35 | 3.10 |
-|     ChatLaw      | 3.31 | 2.90 | 3.35 | 3.19 |
-|   DISC-LawLLM    | **3.46** | 3.12 | **3.59** | **3.39** | -->
 
 ## 致谢
 
