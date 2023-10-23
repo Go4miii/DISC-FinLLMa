@@ -14,17 +14,17 @@ ZH | [EN](./README-en.md)
 DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能、全面的**金融咨询服务**的金融领域大模型，由[复旦大学数据智能与社会计算实验室 (Fudan-DISC)](http://fudan-disc.com) 开发并开源。
 
 我们将在该项目中开源如下资源：
-<!-- * [DISC-Fin-SFT 数据集](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)（不包括法律问答部分） -->
 * [DISC-FinLLM 模型参数](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
 您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
 
-<!-- - [模型微调](#模型微调) -->
+
 
 ## 目录
 
 - [概述](#概述)
+- [模型微调](#模型微调)
 - [推理和部署](#推理和部署)
 - [DISC-Fin-Eval Benchmark](#disc-fin-eval-benchmark)
 - [致谢](#致谢)
@@ -40,18 +40,11 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 
 DISC-FinLLM是一个金融领域的大语言模型，是由面向不同金融场景的4个模组：金融咨询、金融文本分析、金融计算、金融知识检索问答构成的多专家智慧金融系统。这些模组分别在金融NLP任务、人类试题、资料分析和时事分析等四个评测中展现出明显优势，证明了DISC-FinLLM能为广泛的金融领域提供强有力的支持。DISC-FinLLM能在不同应用场景下提供帮助，可用于实现不同的功能：
 
-<!-- DISC-LawLLM 是一个具有法律推理和知识检索能力的智能法律系统，它面向不同群体，能在不同应用场景下提供帮助，主要有以下几个特点： -->
-
 * **金融咨询：** 该模组可以在中国金融语境下，与用户展开关于金融话题的多轮对话，或是为用户解释金融专业的相关知识，是由数据集中的金融咨询指令部分训练而来。
 * **金融文本分析：** 该模组可以帮助用户在金融文本上完成的信息抽取、情感分析、文本分类、文本生成等NLP任务，是由数据集中的金融任务指令部分训练而来。
 * **金融计算：** 该模组可以帮助用户完成与数学计算相关的任务，除了利率、增长率等基本计算，它还支持统计分析和包括Black-Scholes期权定价模型、EDF预期违约概率模型在内的金融模型计算。这一模组是由数据集中的金融计算指令部分训练而来。
 * **金融知识检索问答：** 该模组可以基于金融新闻、研报和相关政策文件为用户提供投资建议、时事分析、政策解读。它是由数据集中的检索增强指令部分训练而来。
 
-
-<!-- 除此之外，我们的研究过程还包括了如下贡献：
-
-* **高质量的训练数据集和普遍有效的训练范式**
-* **完备的法律模型测评框架和测评数据集** -->
 
 
 
@@ -73,13 +66,7 @@ DISC-FinLLM是一个金融领域的大语言模型，是由面向不同金融场
 
 ![exam_ref_demo](./images/example_retrieval.gif)
 
-<!-- #### 法条检索
 
-![law_ref_demo](./images/example_law_ref.gif)
-
-#### 带检索的法律咨询
-
-![consult_ref_demo](./images/example_consult_ref.gif) -->
 
 ### DISC-Fin-SFT 数据集
 DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用领域中文大模型Baichuan-13B-Chat上进行LoRA指令微调得到的金融大模型。DISC-Fin-SFT总共包含约25万条数据，分为四个子数据集，它们分别是金融咨询指令、金融任务指令、金融计算指令、检索增强指令。
@@ -159,102 +146,32 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 我们开源了部分数据集，您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
 
 
-<!-- 不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
+## 模型微调
 
-<img src="" alt="" width=""/>
+### LoRA微调
 
-<table>
-  <tr>
-    <th>数据集</th>
-    <th>对应任务/来源</th>
-    <th>样本量</th>
-    <th>对应情境</th>
-  </tr>
-  <tr>
-    <td rowspan="10">DISC-Law-SFT-Pair</td>
-    <td>司法要素提取</td>
-    <td>32K</td>
-    <td rowspan="7">法律专业人员助手</td>
-  </tr>
-  <tr>
-    <td>司法事件检测</td>
-    <td>27K</td>
-  </tr>
-  <tr>
-    <td>案件分类</td>
-    <td>20K</td>
-  </tr>
-  <tr>
-    <td>判决预测</td>
-    <td>11K</td>
-  </tr>
-  <tr>
-    <td>类案匹配</td>
-    <td>8K</td>
-  </tr>
-  <tr>
-    <td>司法摘要</td>
-    <td>9K</td>
-  </tr>
-  <tr>
-    <td>舆情摘要</td>
-    <td>6K</td>
-  </tr>
-  <tr>
-    <td>法律问答</td>
-    <td>93K</td>
-    <td>法律咨询服务</td>
-  </tr>
-  <tr>
-    <td>司法阅读理解</td>
-    <td>38K</td>
-    <td rowspan="2">法律考试助手</td>
-  </tr>
-  <tr>
-    <td>法律考试</td>
-    <td>12K</td>
-  </tr>
-  <tr>
-    <td rowspan="2">DISC-Law-SFT-Triplet</td>
-    <td>判决预测</td>
-    <td>16K</td>
-    <td>法律专业人员助手</td>
-  </tr>
-  <tr>
-    <td>法律问答</td>
-    <td>23K</td>
-    <td>法律咨询服务</td>
-  </tr>
-  <tr>
-    <td rowspan="2">General</td>
-    <td>Alpaca-GPT4</td>
-    <td>48K</td>
-    <td rowspan="2">通用场景</td>
-  </tr>
-  <tr>
-    <td>Firefly</td>
-    <td>60K</td>
-  </tr>
-  <tr>
-    <td>总计</td>
-    <td colspan="3">403K</td>
-  </tr>
-</table> -->
+针对金融领域的不同功能，我们首先采用了多专家微调的训练策略。我们在特定的子数据集上训练模型的各个模组，使它们彼此互不干扰，独立完成不同任务。为此，我们使用DDP技术的Low-rank adaption（LoRA）方法高效地进行参数微调。
 
-<!-- 我们总共发布了近30万条训练数据，其中包括 DISC-Law-SFT-Pair 和DISC-Law-SFT-Triplet。您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
+![Image](./images/lora_zh.png)
 
-### 检索增强模块
+具体来说，我们以Baichuan-13B-Chat为基座模型，通过数据集的四个部分，分别训练4个LoRA专家模组。部署时，用户只需更换在当前基座上的LoRA参数就可以切换功能。因此用户能够根据使用需求激活/停用模型的不同模组，而无需重新加载整个模型。4个LoRA专家模组分别如下：
+- 金融顾问：该模型用于多轮对话。由于我们的金融咨询指令数据十分丰富，该模型可以在中国的金融语境下做出高质量的回答，为用户解答金融领域的专业问题，提供优质的咨询服务。
+- 文件分析师：该模型主要用于处理金融自然语言处理领域内的各种任务，包括但不限于金融文本中的信息抽取、情绪分析等。
+- 财务会计师：DISC-FinLLM支持四种工具，即表达式计算器、方程求解器、计数器和概率表。这些工具支持我们的模型完成金融领域的大多数的计算任务，如金融数学建模、统计分析等。当模型需要使用工具时，它可以生成工具调用命令，然后中断解码，并将工具调用结果添加到生成的文本中。这样，DISC-FinLLM就可以借助工具提供的准确计算结果，回答金融中的计算问题。
+- 时事分析师：我们在第四个LoRA训练中引入检索插件。DISC-FinLLM主要参考了三类金融文本：新闻、报告和政策。当用户问及时事、行业趋势或金融政策等常见金融话题时，我们的模型可以检索相关文件，并像金融专家一样展开分析并提供建议。
 
-我们在 DISC-LawLLM 的基础上增加了一个基于开源检索框架 [Langchain-Chatchat](https://github.com/chatchat-space/Langchain-Chatchat) 的检索模块。我们的知识库目前包括法条库和法考题库。
 
-* 法条库包含 800 多部国家地方法律、条例和规定，其中包括《宪法》、《刑法》、《行政诉讼法》、《保险法》、《劳动法》、《著作权法》、《民法典》、《专利法》、《专属经济区和大陆架法》、《中国人民解放军选举全国人民代表大会和县级以上地方各级人民代表大会代表的办法》、《反分裂国家法》、《出境入境边防检查条例》、《国务院关于鼓励台湾同胞投资的规定》、《境内外国人宗教活动管理规定》等。
-* 法考题库包含 2.4 万道法律相关的考试题目。
+### 全量微调
 
-在未来，我们会增加更加丰富的知识库。我们还将进一步深入探索检索增强的 DISC-LawLLM，包括但不限于检索器与 LLM 的联合训练机制，各位有兴趣可以与我们一起交流。 -->
+
 
 ## 推理和部署
 
-开源版本的 DISC-FinLLM 是基于 [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B) 进行LoRA微调训练得到的。您可以直接从 [Hugging Face](https://huggingface.co/ShengbinYue/DISC-LawLLM) 上下载我们的模型权重，或者根据下面的代码样例自动获取。推理前请安装依赖：
+当前版本的 DISC-FinLLM 是基于[Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B)训练得到的。我们分别使用不同数据进行了LoRA训练，以及使用全部数据进行了全参训练。您可以直接从 [Hugging Face](https://huggingface.co/Go4miii/DISC-FinLLM) 上下载我们的模型权重。
+
+
+
+首先，您需要安装项目的依赖环境。
 
 ```
 pip install -r requirements.txt
@@ -300,7 +217,16 @@ streamlit run web_demo.py --server.port 8888
 
 <!-- ## 模型微调
 
-开发者可以对 DISC-FinLLM 进行微调使用。在此可以参照与 DISC-LawLLM 兼容的微调工具 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 或是我们的 [DISC-MedLLM](https://github.com/FudanDISC/DISC-MedLLM) 医疗大模型。我们以 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 为例给出**全量**和 **LoRA** 两种微调示例。
+针对金融领域的不同功能，我们采用了多专家微调的训练策略。我们在特定的子数据集上训练模型的各个模组，使它们彼此互不干扰，独立完成不同任务。为此，我们使用DDP技术的Low-rank adaption（LoRA）方法高效地进行参数微调。
+
+具体来说，我们以Baichuan-13B为基座模型，通过数据集的四个部分，分别训练4个LoRA专家模组，如图12所示。部署时，用户只需更换在当前基座上的LoRA参数就可以切换功能。因此用户能够根据使用需求激活/停用模型的不同模组，而无需重新加载整个模型。4个LoRA专家模组分别如下：
+- 金融顾问：该模型用于多轮对话。由于我们的金融咨询指令数据十分丰富，该模型可以在中国的金融语境下做出高质量的回答，为用户解答金融领域的专业问题，提供优质的咨询服务。
+- 文件分析师：该模型主要用于处理金融自然语言处理领域内的各种任务，包括但不限于金融文本中的信息抽取、情绪分析等。
+- 财务会计师：DISC-FinLLM支持四种工具，即表达式计算器、方程求解器、计数器和概率表。这些工具支持我们的模型完成金融领域的大多数的计算任务，如金融数学建模、统计分析等。当模型需要使用工具时，它可以生成工具调用命令，然后中断解码，并将工具调用结果添加到生成的文本中。这样，DISC-FinLLM就可以借助工具提供的准确计算结果，回答金融中的计算问题。
+- 时事分析师：我们在第四个LoRA训练中引入检索插件。DISC-FinLLM主要参考了三类金融文本：新闻、报告和政策。当用户问及时事、行业趋势或金融政策等常见金融话题时，我们的模型可以检索相关文件，并像金融专家一样展开分析并提供建议。 -->
+
+
+<!-- 开发者可以对 DISC-FinLLM 进行微调使用。在此可以参照与 DISC-LawLLM 兼容的微调工具 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 或是我们的 [DISC-MedLLM](https://github.com/FudanDISC/DISC-MedLLM) 医疗大模型。我们以 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 为例给出**全量**和 **LoRA** 两种微调示例。
 
 首先，下载 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 并按其要求[安装依赖](https://github.com/hiyouga/LLaMA-Efficient-Tuning#getting-started)。注意训练数据按照项目中的要求进行处理。下面我们给出两种微调场景下的脚本样例。
 
