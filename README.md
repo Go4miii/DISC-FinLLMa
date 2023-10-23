@@ -14,7 +14,8 @@ ZH | [EN](./README-en.md)
 DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能、全面的**金融咨询服务**的金融领域大模型，由[复旦大学数据智能与社会计算实验室 (Fudan-DISC)](http://fudan-disc.com) 开发并开源。
 
 我们将在该项目中开源如下资源：
-* [DISC-FinLLM 模型参数](https://huggingface.co/ShengbinYue/DISC-LawLLM)
+* [DISC-FinLLM-SFT 训练数据样例](./data)
+* [DISC-FinLLM 模型参数](https://huggingface.co/Go4miii/DISC-FinLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
 您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
@@ -405,7 +406,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 
 #### 时事分析评测
-此评测基于GPT-4模型作出评估。我们构建了一个金融问题数据集，其中的问题需要模型使用最新信息来获得准确答案。然后我们在谷歌等搜索引擎中手动搜索，以收集与每个问题相关的多个参考文段。该数据集旨在评估出模型在回答金融问题时检索信息的相关性和准确性，我们用四个指标评价模型的表现，即准确性、实用性、语言质量和思考性。评测结果如下：
+此评测基于GPT-3.5模型作出评估。我们构建了一个金融问题数据集，其中的问题需要模型使用最新信息来获得准确答案。然后我们在谷歌等搜索引擎中手动搜索，以收集与每个问题相关的多个参考文段。该数据集旨在评估出模型在回答金融问题时检索信息的相关性和准确性，我们用四个指标评价模型的表现，即准确性、实用性、语言质量和思考性。评测结果如下：
 |                          | 准确性 | 实用性 | 语言质量 | 思考性 |
 |--------------------------|:------:|:------:|:--------:|:------:|
 | Baichuan13B-Chat         |  4.08  |  4.15  |   4.21   |  3.88  |
