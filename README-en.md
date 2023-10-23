@@ -34,7 +34,7 @@ You can experience our DISC-FinLLM online by visiting this [link](https://finllm
 
 ## Overview
 
-![Image](./images/model_zh.png)
+![Image](./images/model_en.png)
 
 <p></p>
 
@@ -71,7 +71,7 @@ DISC-FinLLM is a large language model in the financial field. It is a multi-expe
 ### DISC-Fin-SFT Dataset
 DISC-FinLLM is a large financial model based on the high-quality financial data set DISC-Fin-SFT. We construct and fine-tuned the LoRA instruction on the general-domain Chinese large model Baichuan-13B-Chat. DISC-Fin-SFT contains a total of about 250,000 pieces of data, divided into four sub-data sets, which are financial consulting instructions, financial task instructions, financial computing instructions, and retrieval-enhanced instructions.
 
-![Image](./images/data_zh.png)
+![Image](./images/data_en.png)
 
 | Dataset | Samples | Input Length | Output Length  |
 |----------------:|----------------:|------------------------------------------------------------:|-----------------------------------------------------------:|
@@ -139,7 +139,7 @@ We have open sourced part of the data set. You can visit this [link](https://hug
 
 For different functions in the financial field, we first adopt a multi-expert fine-tuning training strategy. We train each module of the model on a specific sub-dataset so that they do not interfere with each other and complete different tasks independently. To this end, we use Baichuan-13B-Chat as the base model and use the LoRA method to efficiently fine-tune parameters.
 
-![Image](./images/lora_zh.png)
+![Image](./images/lora_en.png)
 
 Through the four parts of the data set, 4 LoRA expert modules are trained respectively. When deployed, users only need to change the LoRA parameters on the current base to switch functions. This allows users to activate/deactivate different modules of the model based on usage requirements without having to reload the entire model. The four LoRA expert modules are as follows:
 - Financial Advisor: This model is used for multi-turn conversations. Because our financial consulting instruction data is very rich, this model can provide high-quality answers in China's financial context, answer professional questions in the financial field for users, and provide high-quality consulting services.
