@@ -15,7 +15,7 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 
 我们将在该项目中开源如下资源：
 <!-- * [DISC-Fin-SFT 数据集](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)（不包括法律问答部分） -->
-* [DISC-FinLLM 模型权重](https://huggingface.co/ShengbinYue/DISC-LawLLM)
+* [DISC-FinLLM 模型参数](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 * [DISC-Fin-Eval Benchmark](https://huggingface.co/ShengbinYue/DISC-LawLLM)
 
 您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
@@ -95,14 +95,16 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 |    DISC-Fin-SFT |            246k |                                                         351 |                                                        198 |
 
 #### 金融咨询指令
-金融咨询指令数据来源于两部分：
-（1） 金融问答数据集。我们首先选择的金融问答数据集是FiQA，由于这是一个英文数据集且回答的答案质量存在一定的不足，因此我们将FiQA中的所有问题翻译成中文，并使用ChatGPT重新生成在中国背景下此问题的答案。除此之外，我们还根据200多个金融名词，针对每个名词让ChatGPT生成对应的问题，并要求在中国背景下回答这些问题。
-（2）经管之家论坛上的公开发帖。我们利用self-chat prompting方法引导ChatGPT围绕帖子主题生成多轮的问答。
+金融咨询指令数据来源于三部分：
+- 这是一个英文的金融问答数据集，其中回答的答案质量参差不齐。因此我们将FiQA中的所有问题翻译成中文，并使用ChatGPT重新生成问题的答案，来提高这一数据集的质量。
+- 金融名词解释。我们在网上收集了200多个金融领域的专业术语（如：杠杆收购），然后使用令ChatGPT为这些专业词汇生成相应的问答对，用以训练模型对金融用语的理解。
+- 经管之家论坛上的公开发帖。我们利用self-chat prompting方法引导ChatGPT围绕帖子主题生成多轮的问答。
+
 在引导ChatGPT生成数据的过程中，我们通过精心设计的prompt确保生成的问答符合中国的国情、立场、态度和语言风格。
 
 #### 金融任务指令
 金融任务指令数据来源于两个部分：
-（1）金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
+- 金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
 
 | 数据集          | 主要任务类型       | 次要任务类型           | 数据量|
 |--------------------|------------------------|---------------------------|-----------:|
@@ -136,10 +138,10 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | FDDC2018           | Translation            | Terminology Translation   |        333 |
 | Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 | -->
 
-（2）金融无标签文本数据集。这是一个金融文本的阅读理解数据集。我们从东方财富网收集了共87k个文章，包括金融新闻和行业研报摘要。然后，基于这些无标签文本中的段落，我们利用ChatGPT得到指令对。
+- 金融无标签文本数据集。这是一个金融文本的阅读理解数据集。我们从东方财富网收集了共87k个文章，包括金融新闻和行业研报摘要。然后，基于这些无标签文本中的段落，我们利用ChatGPT得到指令对。
 
 #### 金融计算指令
-在金融计算中，表达式计算器、方程求解器、正态概率表、计数器四种工具可以帮助模型完成大多数的计算任务。四种工具各有不同的调用命令、输入和输出。例如，计算器的命令是**[Calculator(expression)→result]**。在这一部分，构建金融计算指令的目的就是训练模型在合适的时候调用这些工具解决数学问题。四个工具的定义如下表所示：
+在金融计算中，表达式计算器、方程求解器、正态概率表、计数器四种工具可以帮助模型完成大多数的计算任务。四种工具各有不同的调用命令、输入和输出。例如，计算器的命令是 **[Calculator(expression)→result]**。在这一部分，构建金融计算指令的目的就是训练模型在合适的时候调用这些工具解决数学问题。四个工具的定义如下表所示：
 | 工具名称     | 工具描述                                   |
 |--------------|--------------------------------------------|
 | 表达式计算器 | 输入：初等函数的数学表达式                 |
@@ -412,7 +414,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 |          ChatGLM2 |       61.3       |    28.8    |     35.9    |      28.9     |    11.7    |     42.1    |  34.8  |
 |            (LoRA) |       65.3       |    37.6    |     36.4    |      33.4     |    11.8    |     39.5    |  37.3  |
 
-**你可以在这里查看我们[金融NLP任务评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/evaluator)**的具体内容。
+**你可以在这里查看我们[金融NLP任务评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/evaluator)的具体内容。**
 
 #### 人类试题评测
 我们使用了FIN-Eval基准评估模型在回答真人生成的金融问题上的能力，这个基准涵盖了金融、经济、会计、证书等学科的高质量多项选择题。我们以准确度为指标，来衡量模型的表现。评测结果（%）如下：
@@ -451,7 +453,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 | DISC-FinLLM （检索增强） |  4.13  |  4.29  |   4.33   |  3.95  |
 
 
-**你可以在这里查看我们[资料分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/computing_eval.json)、[时事分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/retriever_eval.json)**的数据集。
+**你可以在这里查看我们[资料分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/computing_eval.json)、[时事分析评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/retriever_eval.json)的数据集。**
 
 <!-- ### 主观评测
 
@@ -499,6 +501,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 - [**LLaMA Efficient Tuning**](https://github.com/hiyouga/LLaMA-Efficient-Tuning)
 - [**FireFly**](https://github.com/yangjianxin1/Firefly)
 - [**FinEval**](https://github.com/SUFE-AIFLM-Lab/FinEval)
+
 同样感谢其他限于篇幅未能列举的为本项目提供了重要帮助的工作。
 
 ## 声明
