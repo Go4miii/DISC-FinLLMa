@@ -207,7 +207,7 @@ messages = [
 response = model.chat(tokenizer, messages)
 print(response)
 ```
-#### LoRA模型
+<!-- #### LoRA模型
 
 ```python
 import torch
@@ -230,7 +230,7 @@ messages = [
 ]
 response = model.chat(tokenizer, messages)
 print(response)
-```
+``` -->
 
 
 ### 命令行工具
