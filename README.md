@@ -20,12 +20,12 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 
 您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
 
+<!-- - [模型微调](#模型微调) -->
 
 ## 目录
 
 - [概述](#概述)
 - [推理和部署](#推理和部署)
-- [模型微调](#模型微调)
 - [DISC-Fin-Eval Benchmark](#disc-fin-eval-benchmark)
 - [致谢](#致谢)
 - [声明](#声明)
@@ -92,7 +92,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 （2）经管之家论坛上的公开发帖。我们利用self-chat prompting方法引导ChatGPT围绕帖子主题生成多轮的问答。
 在引导ChatGPT生成数据的过程中，我们通过精心设计的prompt确保生成的问答符合中国的国情、立场、态度和语言风格。
 
-### 金融任务指令
+#### 金融任务指令
 金融任务指令数据来源于两个部分：
 （1）金融NLP数据集。该部分是基于已有的金融NLP数据集，通过人工编写的prompt改编而来的，图3就是一个例子。我们搜集了十余个开源的NLP中文数据集，可以分为情绪分析、信息抽取、文本生成、文本分类和翻译等几类。此数据集的分布如下所示：
 
@@ -112,7 +112,16 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 | FDDC2018           | Translation            | Terminology Translation   |        333 |
 | Wealth-alpaca-lora | Question Answering     | Question Answering        |      41825 |
 
+（2）金融无标签文本数据集。这是一个金融文本的阅读理解数据集。我们从东方财富网收集了共87k个文章，包括金融新闻和行业研报摘要。然后，基于这些无标签文本中的段落，我们利用ChatGPT得到指令对。
+
 #### 金融计算指令
+在金融计算中，表达式计算器、方程求解器、正态概率表、计数器四种工具可以帮助模型完成大多数的计算任务。四种工具各有不同的调用命令、输入和输出。例如，计算器的命令是**[Calculator(expression)→result]**。在这一部分，构建金融计算指令的目的就是训练模型在合适的时候调用这些工具解决数学问题。四个工具的定义如下表所示：
+
+#### 检索增强指令
+检索增强指令的构造分为三步。第一步，我们根据新闻和研报等金融文本构造金融分析问题。第二步，我们在知识库中检索与问题有关的文档，其中参考文档源于我们构建金融知识库，包含18k研报和69k金融新闻。第三步，我们将问题和参考资料结合在一起，生成问题的答案。在这个过程中，问题和答案是由ChatGPT通过Chain-of-Retrieval (CoR) prompting方法生成的。最终我们构建了一个由20k条检索增强指令组成的数据集，其中的指令涵盖了金融领域中主要的分析形式，包括行业分析、政策分析、投资建议、公司战略规划等。
+
+我们开源了部分数据集，您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
+
 
 <!-- 不同场景下的法律智能应用通常需要结合法律文本理解和生成的多种基本能力。为此，我们构建了一个高质量的监督微调数据集 DISC-Law-SFT，包括法律信息提取、判决预测、文档摘要和法律问题解答，确保覆盖不同司法应用场景。DISC-Law-SFT 包括两个子集，即 DISC-Law-SFT-Pair 和 DISC-Law-SFT-Triplet。前者旨在为 LLM 引入法律推理能力，后者则有助于提高模型利用外部知识的能力，具体的构建细节请参照我们的[技术报告](https://arxiv.org/abs/2309.11325)。数据集的分布如下所示：
 
@@ -196,7 +205,7 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
   </tr>
 </table> -->
 
-我们总共发布了近30万条训练数据，其中包括 DISC-Law-SFT-Pair 和DISC-Law-SFT-Triplet。您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
+<!-- 我们总共发布了近30万条训练数据，其中包括 DISC-Law-SFT-Pair 和DISC-Law-SFT-Triplet。您可以访问这个[链接](https://huggingface.co/datasets/ShengbinYue/DISC-Law-SFT)下载数据集。
 
 ### 检索增强模块
 
@@ -205,11 +214,11 @@ DISC-FinLLM是基于我们构建的高质量金融数据集DISC-Fin-SFT在通用
 * 法条库包含 800 多部国家地方法律、条例和规定，其中包括《宪法》、《刑法》、《行政诉讼法》、《保险法》、《劳动法》、《著作权法》、《民法典》、《专利法》、《专属经济区和大陆架法》、《中国人民解放军选举全国人民代表大会和县级以上地方各级人民代表大会代表的办法》、《反分裂国家法》、《出境入境边防检查条例》、《国务院关于鼓励台湾同胞投资的规定》、《境内外国人宗教活动管理规定》等。
 * 法考题库包含 2.4 万道法律相关的考试题目。
 
-在未来，我们会增加更加丰富的知识库。我们还将进一步深入探索检索增强的 DISC-LawLLM，包括但不限于检索器与 LLM 的联合训练机制，各位有兴趣可以与我们一起交流。
+在未来，我们会增加更加丰富的知识库。我们还将进一步深入探索检索增强的 DISC-LawLLM，包括但不限于检索器与 LLM 的联合训练机制，各位有兴趣可以与我们一起交流。 -->
 
 ## 推理和部署
 
-开源版本的 DISC-LawLLM 是基于 [Baichuan-13B-Base](https://github.com/baichuan-inc/Baichuan-13B) 进行微调训练得到的。您可以直接从 [Hugging Face](https://huggingface.co/ShengbinYue/DISC-LawLLM) 上下载我们的模型权重，或者根据下面的代码样例自动获取。推理前请安装依赖：
+开源版本的 DISC-FinLLM 是基于 [Baichuan-13B-Chat](https://github.com/baichuan-inc/Baichuan-13B) 进行LoRA微调训练得到的。您可以直接从 [Hugging Face](https://huggingface.co/ShengbinYue/DISC-LawLLM) 上下载我们的模型权重，或者根据下面的代码样例自动获取。推理前请安装依赖：
 
 ```
 pip install -r requirements.txt
@@ -251,11 +260,11 @@ python cli_demo.py
 streamlit run web_demo.py --server.port 8888
 ```
 
-此外，目前版本的 DISC-LawLLM 是以 Baichuan-13B 作为基座的，您可以参照 [Baichuan-13B](https://github.com/baichuan-inc/Baichuan-13B) 的介绍来进行 int8 或 int4 量化推理部署以及 CPU 部署。
+此外，目前版本的 DISC-FinLLM 是以 Baichuan-13B 作为基座的，您可以参照 [Baichuan-13B](https://github.com/baichuan-inc/Baichuan-13B) 的介绍来进行 int8 或 int4 量化推理部署以及 CPU 部署。
 
-## 模型微调
+<!-- ## 模型微调
 
-开发者可以对 DISC-LawLLM 进行微调使用。在此可以参照与 DISC-LawLLM 兼容的微调工具 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 或是我们的 [DISC-MedLLM](https://github.com/FudanDISC/DISC-MedLLM) 医疗大模型。我们以 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 为例给出**全量**和 **LoRA** 两种微调示例。
+开发者可以对 DISC-FinLLM 进行微调使用。在此可以参照与 DISC-LawLLM 兼容的微调工具 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 或是我们的 [DISC-MedLLM](https://github.com/FudanDISC/DISC-MedLLM) 医疗大模型。我们以 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 为例给出**全量**和 **LoRA** 两种微调示例。
 
 首先，下载 [LLaMA Efficient Tuning](https://github.com/hiyouga/LLaMA-Efficient-Tuning) 并按其要求[安装依赖](https://github.com/hiyouga/LLaMA-Efficient-Tuning#getting-started)。注意训练数据按照项目中的要求进行处理。下面我们给出两种微调场景下的脚本样例。
 
@@ -350,9 +359,9 @@ torchrun --nproc_per_node 4 src/train_bash.py \
     --load_best_model_at_end \
     --plot_loss \
     --fp16
-```
+``` -->
 
-## DISC-Law-Eval-Benchmark
+## DISC-Fin-Eval-Benchmark
 
 受司法考试构成的启发，我们开发了一个公平的评估框架 —— DISC-Law-Eval Benchmark，从客观和主观两个角度对法律大语言模型的性能进行评估，以考察模型在中国法律领域的性能。您可以点击此[链接](./eval)使用我们的 DISC-Law-Eval-Benchmark（即将发布）。
 
@@ -360,186 +369,7 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 为了客观、定量地评估智能法律系统的法律知识和推理能力，客观的评价数据集由一系列中国法律标准化考试和知识竞赛的单项和多项选择题组成，并根据内容复杂性和演绎难度，将问题分为困难、中等和简单三个层次。它可以提供一个更具挑战性和可靠的方法来衡量模型是否可以利用其知识来推理正确的答案。我们通过计算精度来表明性能。具体构成如下：
 
-| Dataset            | Major Task Type        | Minor Task Type         | \# Samples |
-|--------------------|------------------------|-------------------------|-----------:|
-| FPB                | Sentiment Analysis     | Sentiment Analysis      |      18690 |
-| FIQA-SA            | Sentiment Analysis     | Sentiment Analysis      |          - |
-| FNSC               | Sentiment Analysis     | Sentiment Analysis      |          - |
-| CCKS-NEC-2022      | Imformation Extraction | Causality Extraction    |       7499 |
-| SmoothNLP IEE      | Imformation Extraction | Event Extraction        |       3256 |
-| SmoothNLP NHG      | Text Generation        | Text Generation         |       4642 |
-| CCKS2022-event     | Imformation Extraction | Event Type Extraction   |       3678 |
-| Minds14            | Imformation Extraction | Event Type Extraction   |      59143 |
-| Financial Report   | Imformation Extraction | Entity Extraction       |      61705 |
-| OpenKG             | Imformation Extraction | Entity Extraction       |       7672 |
-| OpenKG             | Imformation Extraction | Entity Extraction       |      67921 |
-| FDDC2018           | Translation            | Terminology Translation |        333 |
-| Wealth-alpaca-lora | Question Answering     | Question Answering      |      41825 |
-| Wealth-alpaca-lora | Text Generation        | Keyword Generation      |      41825 |
-| TE~                | Question Answering     | Terminology Explanation |       1836 |
 
-
-
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-.tg .tg-dvpl{border-color:inherit;text-align:right;vertical-align:top}
-</style>
-<table class="tg">
-<thead>
-  <tr>
-    <th class="tg-0pky">Dataset</th>
-    <th class="tg-0pky">Major Task Type</th>
-    <th class="tg-0pky">Minor Task Type</th>
-    <th class="tg-dvpl">\# Samples</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td class="tg-0pky">FPB</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-dvpl">18690</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">FIQA-SA</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-dvpl">-</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">FNSC</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-0pky">Sentiment Analysis</td>
-    <td class="tg-dvpl">-</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">CCKS-NEC-2022</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Causality Extraction</td>
-    <td class="tg-dvpl">7499</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">SmoothNLP IEE</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Event Extraction</td>
-    <td class="tg-dvpl">3256</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">SmoothNLP NHG</td>
-    <td class="tg-0pky">Text Generation</td>
-    <td class="tg-0pky">Text Generation</td>
-    <td class="tg-dvpl">4642</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">CCKS2022-event</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Event Type Extraction</td>
-    <td class="tg-dvpl">3678</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Minds14</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Event Type Extraction</td>
-    <td class="tg-dvpl">59143</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Financial Report</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Entity Extraction</td>
-    <td class="tg-dvpl">61705</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">OpenKG</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Entity Extraction</td>
-    <td class="tg-dvpl">7672</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">OpenKG</td>
-    <td class="tg-0pky">Imformation Extraction</td>
-    <td class="tg-0pky">Entity Extraction</td>
-    <td class="tg-dvpl">67921</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">FDDC2018</td>
-    <td class="tg-0pky">Translation</td>
-    <td class="tg-0pky">Terminology Translation</td>
-    <td class="tg-dvpl">333</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Wealth-alpaca-lora</td>
-    <td class="tg-0pky">Question Answering</td>
-    <td class="tg-0pky">Question Answering</td>
-    <td class="tg-dvpl">41825</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Wealth-alpaca-lora</td>
-    <td class="tg-0pky">Text Generation</td>
-    <td class="tg-0pky">Keyword Generation</td>
-    <td class="tg-dvpl">41825</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">TE~</td>
-    <td class="tg-0pky">Question Answering</td>
-    <td class="tg-0pky">Terminology Explanation</td>
-    <td class="tg-dvpl">1836</td>
-  </tr>
-</tbody>
-</table>
-
-<table>
-  <tr>
-    <th>科目</th>
-    <th>难度等级</th>
-    <th>单选题数量</th>
-    <th>多选题数量</th>
-    <th>总数</th>
-  </tr>
-  <tr>
-    <td>NJE：国家统一法律职业资格考试</td>
-    <td rowspan="3">困难</td>
-    <td>537</td>
-    <td>463</td>
-    <td>1000</td>
-  </tr>
-  <tr>
-    <td>PAE：专利代理人考试</td>
-    <td>118</td>
-    <td>276</td>
-    <td>394</td>
-  </tr>
-  <tr>
-    <td>CPA：注册会计师资格考试</td>
-    <td>197</td>
-    <td>120</td>
-    <td>317</td>
-  </tr>
-  <tr>
-    <td>UNGEE：法学专硕全国统考试题</td>
-    <td>中等</td>
-    <td>320</td>
-    <td>87</td>
-    <td>407</td>
-  </tr>
-  <tr>
-    <td>LBK：法律基础知识题库</td>
-    <td rowspan="2">简单</td>
-    <td>275</td>
-    <td>-</td>
-    <td>275</td>
-  </tr>
-  <tr>
-    <td>PFE：事业编、公务员考试法律试题</td>
-    <td>170</td>
-    <td>-</td>
-    <td>170</td>
-  </tr>
-</table>
 
 **你可以在这里查看我们的[客观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/objective_eval)**
 
