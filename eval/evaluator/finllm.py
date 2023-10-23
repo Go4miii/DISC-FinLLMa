@@ -9,28 +9,16 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.generation.utils import GenerationConfig
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--device', default='cuda:0', required=True, help='which cuda device you want to inference')
-parser.add_argument('--model', type=str, help='自定义LLM名称')
-parser.add_argument('--lora_path', default='', type=str, help='自定义LLM名称')
-args = parser.parse_args()
-
-model = args.model
-lora_path = None if args.lora_path == '' else args.lora_path
-
-DEVICE = args.device
-
-
 class DISCFINLLMBase(metaclass=ABCMeta):
 
     @abstractmethod
-    def generate(self, prompt: str) -> str:
+    def generate(self, device: str, prompt: str) -> str:
         # 模型需要接收提示prompt，使用模型生成回复
         raise NotImplementedError
 
 
 class DISCVFINLLMChatGLM26B(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self, device: str = None, lora_path: str = None):
         model_name_or_path = "THUDM/chatglm2-6b"
         dtype = torch.float16
         # 训练后的lora保存的路径
@@ -38,7 +26,7 @@ class DISCVFINLLMChatGLM26B(DISCFINLLMBase):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
         self.model = AutoModel.from_pretrained(model_name_or_path,
                                                trust_remote_code=True,
-                                               torch_dtype=dtype).to(DEVICE)  # .half().cuda()
+                                               torch_dtype=dtype).to(device)  # .half().cuda()
         if lora_path:
             peft_model_id = lora_path
 
@@ -51,7 +39,7 @@ class DISCVFINLLMChatGLM26B(DISCFINLLMBase):
 
 
 class DISCVFINLLMChatGLM6B(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self, device: str = None, lora_path: str = None):
         model_name_or_path = "THUDM/ChatGLM-6B"
         dtype = torch.float16
         # 训练后的lora保存的路径
@@ -59,7 +47,7 @@ class DISCVFINLLMChatGLM6B(DISCFINLLMBase):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
         self.model = AutoModel.from_pretrained(model_name_or_path,
                                                trust_remote_code=True,
-                                               torch_dtype=dtype).to(DEVICE)  # .half().cuda()
+                                               torch_dtype=dtype).to(device)  # .half().cuda()
         if lora_path:
             peft_model_id = lora_path
 
@@ -72,7 +60,7 @@ class DISCVFINLLMChatGLM6B(DISCFINLLMBase):
 
 
 class DISCVFINLLMBaichuan13BBase(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self,  device: str = None, lora_path: str = None):
         model_name_or_path = "baichuan-inc/Baichuan-13B-Base"
         dtype = torch.float16
         # 训练后的lora保存的路径
@@ -81,13 +69,14 @@ class DISCVFINLLMBaichuan13BBase(DISCFINLLMBase):
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                           torch_dtype=torch.float16,
-                                                          trust_remote_code=True).to(DEVICE)
+                                                          trust_remote_code=True).to(device)
         self.model.generation_config = GenerationConfig.from_pretrained("baichuan-inc/Baichuan-13B-Base")
 
         if lora_path:
             peft_model_id = lora_path
 
             self.model = PeftModel.from_pretrained(self.model, peft_model_id)
+        self.device = device
 
     def generate(self, prompt: str) -> str:
         template = (
@@ -97,16 +86,15 @@ class DISCVFINLLMBaichuan13BBase(DISCFINLLMBase):
         )
 
         inputs = self.tokenizer([template.format(prompt)], return_tensors="pt")
-        inputs = inputs.to(DEVICE)
+        inputs = inputs.to(self.device)
         generate_ids = model.generate(**inputs, max_new_tokens=256)
 
         return generate_ids
 
 
 class DISCVFINLLMBaichuan13BChat(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self,  device: str = None, lora_path: str = None):
         model_name_or_path = "baichuan-inc/Baichuan-13B-Chat"
-        # model_name_or_path='/root/.cache/huggingface/hub/models--baichuan-inc--Baichuan-13B-Chat/snapshots/e580bc803f3f4f6b42ddccd0730739c057c7b54c'
         dtype = torch.float16
         # 训练后的lora保存的路径
 
@@ -114,7 +102,7 @@ class DISCVFINLLMBaichuan13BChat(DISCFINLLMBase):
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                           torch_dtype=torch.float16,
-                                                          trust_remote_code=True).to(DEVICE)
+                                                          trust_remote_code=True).to(device)
         self.model.generation_config = GenerationConfig.from_pretrained(model_name_or_path)
 
         if lora_path:
@@ -132,7 +120,7 @@ class DISCVFINLLMBaichuan13BChat(DISCFINLLMBase):
 
 
 class DISCVFINLLMBaichuan7B(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self,  device: str = None, lora_path: str = None):
         model_name_or_path = "baichuan-inc/Baichuan-7B"
         dtype = torch.float16
         # 训练后的lora保存的路径
@@ -140,13 +128,15 @@ class DISCVFINLLMBaichuan7B(DISCFINLLMBase):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path, trust_remote_code=True).half()
-        self.model = self.model.to(DEVICE)
+        self.model = self.model.to(device)
 
         if lora_path:
             peft_model_id = lora_path
 
             self.model = PeftModel.from_pretrained(self.model, peft_model_id)
 
+        self.device = device
+        
     def generate(self, prompt: str) -> str:
         template = (
             "A chat between a curious user and an artificial intelligence assistant. "
@@ -155,7 +145,7 @@ class DISCVFINLLMBaichuan7B(DISCFINLLMBase):
         )
 
         inputs = self.tokenizer(template.format(prompt), return_tensors='pt')
-        inputs = inputs.to(DEVICE)
+        inputs = inputs.to(self.device)
         pred = self.model.generate(**inputs, max_new_tokens=64, repetition_penalty=1.1)
         answer = self.tokenizer.decode(pred.cpu()[0], skip_special_tokens=True)
         print(answer)
@@ -167,20 +157,21 @@ class DISCVFINLLMBaichuan7B(DISCFINLLMBase):
 
 
 class DISCVFINLLMBloomz7B(DISCFINLLMBase):
-    def __init__(self, lora_path: str = None):
+    def __init__(self,  device: str = None, lora_path: str = None):
         model_name_or_path = "bigscience/bloomz-7b1-mt"
         dtype = torch.float16
         # 训练后的lora保存的路径
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
 
-        self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path).half().to(DEVICE)
+        self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path).half().to(device)
 
         if lora_path:
             peft_model_id = lora_path
 
             self.model = PeftModel.from_pretrained(self.model, peft_model_id)
-
+        self.device = device
+        
     def generate(self, prompt: str) -> str:
         # template = (
         #     "A chat between a curious user and an artificial intelligence assistant. "
@@ -216,7 +207,7 @@ class DISCVFINLLMBloomz7B(DISCFINLLMBase):
             "Human: {}\nAssistant: "
         )
         inputs = self.tokenizer.encode_plus(template.format(prompt), return_tensors='pt')
-        outputs = self.model.generate(**inputs.to(DEVICE), max_new_tokens=128, repetition_penalty=1.1)
+        outputs = self.model.generate(**inputs.to(self.device), max_new_tokens=128, repetition_penalty=1.1)
         # answer = self.tokenizer.decode(outputs[0]).replace(prompt, '')
         answer = self.tokenizer.decode(outputs[0])
         # start_index = answer.find("Assistant:")
@@ -241,7 +232,7 @@ class DISCVFINLLMBloomz7B(DISCFINLLMBase):
 
 
 class FinGPTv3:
-    def __init__(self):
+    def __init__(self, device: str = None):
         model_name_or_path = "THUDM/chatglm2-6b"
         peft_model = "oliverwang15/FinGPT_ChatGLM2_Sentiment_Instruction_LoRA_FT"
         dtype = torch.float16
@@ -249,12 +240,12 @@ class FinGPTv3:
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, trust_remote_code=True)
 
-        self.model = AutoModel.from_pretrained(model_name_or_path, trust_remote_code=True).to(DEVICE)
+        self.model = AutoModel.from_pretrained(model_name_or_path, trust_remote_code=True).to(device)
         self.model = PeftModel.from_pretrained(self.model, peft_model)
-
+        self.device =  device
     def generate(self, prompt: str) -> str:
         tokens = self.tokenizer(prompt, return_tensors='pt', padding=True, max_length=512)
-        res = self.model.generate(**tokens.to(DEVICE), max_length=512)
+        res = self.model.generate(**tokens.to(self.device), max_length=512)
         # res_sentences = [tokenizer.decode(i) for i in res]
         res_sentences = self.tokenizer.decode(res[0])
         # print(res_sentences)

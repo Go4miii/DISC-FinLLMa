@@ -6,7 +6,7 @@
 
 - 第一步：运行脚本`preprocess.py`，会在本地创建一个`data`的文件夹，把八个任务的数据集下载到本地，并且会针对每个数据集进行相应的处理，方便后续进行评测。同时还会生成一个`instruct_samples.json`文件，这里保存着每个数据集的few-shot。这里需要说明的一点是：我们将第七个数据集拆分成两个数据集，对应着两个不同的任务。
 
-- 第二步：使用如下命令运行脚本`autoeval.py`：
+- 第二步：返回上一目录，使用如下命令运行脚本`autoeval.py`：
 python autoeval.py --model xxxx --lora_path xxxx --eval_data all --device cuda:0
 
 目前model可以分别设置为：chatglm-6b、chatglm2-6b、baichuan-7b、baichuan-13b-base、baichuan-13b-chat、bloomz-7b、fingpt-v3。

@@ -1,14 +1,14 @@
 import argparse
 
-from evaluate import *
-from finllm import *
+from evaluator.evaluate import *
+from evaluator.finllm import *
 
 
 model_lists = {
     'chatglm-6b': DISCVFINLLMChatGLM6B,
     'chatglm2-6b': DISCVFINLLMChatGLM26B,
     'baichuan-7b': DISCVFINLLMBaichuan7B,
-    'baichuan-13b-base': DISCVFINLLMBaichuan13BBase,
+    'baichuan-13b': DISCVFINLLMBaichuan13BBase,
     'baichuan-13b-chat': DISCVFINLLMBaichuan13BChat,
     'bloomz-7b': DISCVFINLLMBloomz7B,
     'fingpt-v3': FinGPTv3,
@@ -19,7 +19,7 @@ Eval_datasets = {
     'finqa': FinQAEvaluator,  # 问答，生成类任务
     'fincqa': FinCQAEvaluator,  # 问答，生成类任务
     'finna': FinNAEvaluator,  # 摘要，生成类任务
-    'finre': FinREEvaluator,  # 抽取，生成类任务
+    'finre': FinREEvaluator, #关系分类，非生成类任务，多标签分类
     'finnsp1': FinNSP1Evaluator,  # 负面消息识别，非生成类任务
     'finnsp2': FinNSP2Evaluator,  # 负面主体判定，非生成类任务，多标签分类
     'finnl': FinNLEvaluator,  # 新闻分类，非生成类任务，多标签分类
@@ -34,12 +34,12 @@ if __name__ == '__main__':
     parser.add_argument('--eval_data', default='all', type=str, help='评测数据集名称')
     parser.add_argument('--device', default='cuda:0', type=str, help='推理的GPU设备')
     args = parser.parse_args()
-
+    device = args.device
     model_name = args.model
     lora_path = None if args.lora_path == '' else args.lora_path
-    device = args.device
     eval_data = args.eval_data
-
+    
+    print(device)
     # 加载模型
     llm = model_lists.get(model_name)(device, lora_path)
     
@@ -50,8 +50,8 @@ if __name__ == '__main__':
         evaluator().run_evaluation(llm)
     else:
         for _, evaluator in Eval_datasets.items():
-            evaluator().run_evaluation(llm)
-            result_list.append(evaluator().run_evaluation(llm))
+            result = evaluator().run_evaluation(llm)
+            result_list.append(result)
     if lora_path is None:
         write_json(f'{model_name}_eval.json',result_list)
     else:
