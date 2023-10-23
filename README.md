@@ -363,9 +363,9 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 ## DISC-Fin-Eval-Benchmark
 
-受司法考试构成的启发，我们开发了一个公平的评估框架 —— DISC-Law-Eval Benchmark，从客观和主观两个角度对法律大语言模型的性能进行评估，以考察模型在中国法律领域的性能。您可以点击此[链接](./eval)使用我们的 DISC-Law-Eval-Benchmark（即将发布）。
+我们建立了一个全面的评估框架 —— DISC-Fin-Eval Benchmark，从各个角度严格评估我们的模型。该评估框架包括四个不同的组成部分，即：金融NLP任务、人类试题、资料分析和时事分析。这一评估框架全面地证明了我们模型能力和训练数据的有效性。您可以点击此[链接](./eval)使用我们的 DISC-Fin-Eval-Benchmark。
 
-### 客观评测
+### 评测系统
 
 为了客观、定量地评估智能法律系统的法律知识和推理能力，客观的评价数据集由一系列中国法律标准化考试和知识竞赛的单项和多项选择题组成，并根据内容复杂性和演绎难度，将问题分为困难、中等和简单三个层次。它可以提供一个更具挑战性和可靠的方法来衡量模型是否可以利用其知识来推理正确的答案。我们通过计算精度来表明性能。具体构成如下：
 
@@ -373,13 +373,13 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 **你可以在这里查看我们的[客观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/objective_eval)**
 
-### 主观评测
+<!-- ### 主观评测
 
 在主观评测部分，我们采用问答题形式进行评估，模拟主观考试问题的过程。我们从法律咨询、在线论坛、与司法相关的出版物和法律文件中手工构建了一个高质量的测试集。我们用 GPT-3.5 Turbo 作为裁判模型来评估模型的输出，并基于标准答案用准确性、完整性和清晰度这三个标准提供 1-5 的评分。
 
 主观题数据集从来源于法律咨询、网上发帖、司法相关出版物和法律文书中手动构建的一个高质量的测试集，其中包括 300 个示例，涵盖了法律知识问答、法律咨询和判决预测等场景。
 
-**你可以在这里查看我们的[主观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/subjective_eval)**
+**你可以在这里查看我们的[主观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/subjective_eval)** -->
 
 ### 评测结果
 
