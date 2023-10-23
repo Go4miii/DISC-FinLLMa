@@ -231,7 +231,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.generation.utils import GenerationConfig
 
-model_path = "ShengbinYue/DISC-LawLLM"
+model_path = "ShengbinYue/DISC-FinLLM"
 model = AutoModelForCausalLM.from_pretrained(
     model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True
 )
@@ -367,11 +367,12 @@ torchrun --nproc_per_node 4 src/train_bash.py \
 
 ### 评测系统
 
-为了客观、定量地评估智能法律系统的法律知识和推理能力，客观的评价数据集由一系列中国法律标准化考试和知识竞赛的单项和多项选择题组成，并根据内容复杂性和演绎难度，将问题分为困难、中等和简单三个层次。它可以提供一个更具挑战性和可靠的方法来衡量模型是否可以利用其知识来推理正确的答案。我们通过计算精度来表明性能。具体构成如下：
+#### 金融NLP任务评测
+我们使用FinCUGE评估基准测试模型处理金融NLP任务的能力。这个评测一共包含八项任务，其中包括情感分析、关系抽取、文本摘要、文本分类、事件抽取和其他任务。我们通过提示模板将这个数据集改造为小样本（few-shot）形式，使用常用的准确度（accuracy）、F1和Rouge指标评价模型的表现，来衡量模型在金融领域中理解文本和生成相关回答的能力。**你可以在这里查看我们[金融NLP任务评测](https://github.com/FudanDISC/DISC-FinLLM/tree/main/eval/evaluator)**的具体内容。
 
 
 
-**你可以在这里查看我们的[客观评测集](https://github.com/FudanDISC/DISC-LawLLM/tree/main/eval/data/objective_eval)**
+
 
 <!-- ### 主观评测
 
