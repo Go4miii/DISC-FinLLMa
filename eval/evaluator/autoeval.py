@@ -1,7 +1,7 @@
 import argparse
 
-from evaluator.evaluate import *
-from evaluator.finllm import *
+from evaluate import *
+from finllm import *
 
 
 model_lists = {
@@ -19,6 +19,7 @@ Eval_datasets = {
     'finqa': FinQAEvaluator,  # 问答，生成类任务
     'fincqa': FinCQAEvaluator,  # 问答，生成类任务
     'finna': FinNAEvaluator,  # 摘要，生成类任务
+    'finre': FinREEvaluator,  # 抽取，生成类任务
     'finnsp1': FinNSP1Evaluator,  # 负面消息识别，非生成类任务
     'finnsp2': FinNSP2Evaluator,  # 负面主体判定，非生成类任务，多标签分类
     'finnl': FinNLEvaluator,  # 新闻分类，非生成类任务，多标签分类
@@ -36,6 +37,7 @@ if __name__ == '__main__':
 
     model_name = args.model
     lora_path = None if args.lora_path == '' else args.lora_path
+    device = args.device
     eval_data = args.eval_data
 
     # 加载模型
