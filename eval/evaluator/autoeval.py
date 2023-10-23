@@ -1,7 +1,7 @@
 import argparse
 
-from evaluator.evaluate import *
-from evaluator.finllm import *
+from evaluate import *
+from finllm import *
 
 
 model_lists = {
