@@ -310,7 +310,7 @@ We also extend our gratitide to other contributors who have provided valuable as
 
 ## Disclaimer
 
-DISC-FinLLM has problems and shortcomings that cannot be overcome by current large language models. Although it can provide services in the financial field on many tasks and scenarios, the model should be used for user reference only and cannot replace professional financial analysts and financial experts. , we hope that users of DISC-FinLLM will evaluate the model with a critical eye. We are not responsible for any problems, risks or adverse consequences arising from the use of DISC-FinLLM.
+DISC-FinLLM has problems and shortcomings that cannot be overcome by current large language models. Although it can provide services in the financial field on many tasks and scenarios, the model should be used for user reference only and cannot replace professional financial analysts and financial experts, we hope that users of DISC-FinLLM will be able to critically evaluate the model. We are not responsible for any problems, risks or adverse consequences arising from the use of DISC-FinLLM.
 
 ## Citation
 
