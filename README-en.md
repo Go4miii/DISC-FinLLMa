@@ -11,7 +11,7 @@ ZH | [EN](./README-en.md)
 
 </div>
 
-DISC-FinLLM is a large model in the financial field specifically designed to provide users with professional, intelligent, and comprehensive **financial consulting services** in financial scenarios. It is developed by [Fudan University Data Intelligence and Social Computing Laboratory (Fudan-DISC)](http://fudan-disc.com) developed and open source.
+DISC-FinLLM is a large model in the financial field specifically designed to provide users with professional, intelligent, and comprehensive **financial consulting services** in financial scenarios. It is developed and open sourced by [Fudan University Data Intelligence and Social Computing Laboratory (Fudan-DISC)](http://fudan-disc.com).
 
 We will open source the following resources in this project:
 * [DISC-FinLLM-SFT training data samples](./data)
