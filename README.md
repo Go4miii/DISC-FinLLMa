@@ -329,18 +329,8 @@ DISC-FinLLM 有着目前大语言模型尚无法克服的问题和缺陷，尽�
 
 ## 引用
 
-如果我们的项目对您的研究和工作有帮助，请如下引用我们的项目：
+即将更新。
 
-```
-@misc{yue2023disclawllm,
-    title={DISC-LawLLM: Fine-tuning Large Language Models for Intelligent Legal Services}, 
-    author={Shengbin Yue and Wei Chen and Siyuan Wang and Bingxuan Li and Chenchen Shen and Shujun Liu and Yuxuan Zhou and Yao Xiao and Song Yun and Xuanjing Huang and Zhongyu Wei},
-    year={2023},
-    eprint={2309.11325},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL}
-}
-```
 
 ## 协议
 
