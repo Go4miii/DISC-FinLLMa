@@ -7,7 +7,7 @@ ZH | [EN](./README-en.md)
 [![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/Go4miii/DISC-FinLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
-[Demo](https://finllm.fudan-disc.com) | [Technical Report](https://arxiv.org/abs/2309.11325)
+[Demo](https://fin.fudan-disc.com) | [Technical Report](http://arxiv.org/abs/2310.15205)
 
 </div>
 
@@ -18,7 +18,7 @@ We will open source the following resources in this project:
 * [DISC-FinLLM model parameters](https://huggingface.co/Go4miii/DISC-FinLLM)
 * [DISC-Fin-Eval Benchmark](./eval)
 
-You can experience our DISC-FinLLM online by visiting this [link](https://finllm.fudan-disc.com).
+You can experience our DISC-FinLLM online by visiting this [link](https://fin.fudan-disc.com).
 
 
 
