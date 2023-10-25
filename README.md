@@ -208,6 +208,32 @@ response = model.chat(tokenizer, messages)
 print(response)
 ```
 
+#### LoRA模型
+
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers.generation.utils import GenerationConfig
+from peft import PeftModel, PeftConfig
+
+model_path = "Go4miii/DISC-FinLLM"
+model = AutoModelForCausalLM.from_pretrained(
+    model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True
+)
+model.generation_config = GenerationConfig.from_pretrained(model_path)
+tokenizer = AutoTokenizer.from_pretrained(
+    model_path, use_fast=False, trust_remote_code=True,
+)
+model = PeftModel.from_pretrained(model, lora_path
+)
+
+messages = [
+    {"role": "user", "content": "请解释一下什么是银行不良资产？"},
+]
+response = model.chat(tokenizer, messages)
+print(response)
+```
+
 
 ### 命令行工具
 
