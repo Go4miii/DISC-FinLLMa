@@ -7,7 +7,7 @@ ZH | [EN](./README-en.md)
 [![Generic badge](https://img.shields.io/badge/🤗-Huggingface%20Repo-green.svg)](https://huggingface.co/Go4miii/DISC-FinLLM)
 [![license](https://img.shields.io/github/license/modelscope/modelscope.svg)](./LICENSE)
 
-[Demo](https://finllm.fudan-disc.com) | [技术报告](https://arxiv.org/abs/2309.11325)
+[Demo](https://fin.fudan-disc.com) | [技术报告](http://arxiv.org/abs/2310.15205)
 
 </div>
 
@@ -18,7 +18,7 @@ DISC-FinLLM 是一个专门针对金融场景下为用户提供专业、智能�
 * [DISC-FinLLM 模型参数](https://huggingface.co/Go4miii/DISC-FinLLM)
 * [DISC-Fin-Eval Benchmark](./eval)
 
-您可以通过访问这个[链接](https://finllm.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
+您可以通过访问这个[链接](https://fin.fudan-disc.com)来在线体验我们的 DISC-FinLLM。
 
 
 
