@@ -314,7 +314,9 @@ DISC-FinLLM has problems and shortcomings that cannot be overcome by current lar
 
 ## Citation
 
-If our project has been helpful for your research and work, please kindly cite our work as follows:
+Update coming soon.
+
+<!-- If our project has been helpful for your research and work, please kindly cite our work as follows:
 
 ```
 @misc{yue2023disclawllm,
@@ -325,7 +327,7 @@ If our project has been helpful for your research and work, please kindly cite o
     archivePrefix={arXiv},
     primaryClass={cs.CL}
 }
-```
+``` -->
 
 ## License
 
